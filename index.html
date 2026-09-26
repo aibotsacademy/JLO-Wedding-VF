@@ -26,7 +26,13 @@
   --meander:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='%23C49A3A' stroke-width='2'%3E%3Cpath d='M0 1H24M0 23H24M18 23V5H6V17H12V11'/%3E%3C/svg%3E");
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+/* Evita que un deslizamiento rápido corra la pantalla de lado en iPhone */
+.cam,.quest,.guide{max-width:100vw}
+.q-body,.q-chaps-wrap,.q-prog,.q-head,.q-groups,.q-gate{min-width:0;max-width:min(480px,100%)}
+.q-chaps{touch-action:pan-x;overscroll-behavior-x:contain}
+.q-stage{overflow:hidden}
+.qcard{contain:paint}
 body{font-family:var(--body);font-size:17px;line-height:1.6;color:var(--tinta);background:var(--marmol);overflow-x:hidden;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom,0px)}
 body.noscroll{overflow:hidden}
 img,svg,video{display:block;max-width:100%}
@@ -242,10 +248,16 @@ body.recording .cam-frame i{border-color:var(--rec)}
 .cam-rec{position:absolute;left:50%;top:calc(82px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:3;display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(3,11,20,.62);font-family:var(--sign);font-weight:600;font-size:18px;font-variant-numeric:tabular-nums}
 .cam-rec i{width:10px;height:10px;border-radius:50%;background:var(--rec);animation:blink 1s steps(1) infinite}
 .cam-bottom{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:0 22px calc(16px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:1fr auto 1fr;align-items:center;row-gap:12px}
-.cam-modes{grid-column:1/-1;justify-self:center;display:flex;gap:4px;padding:3px;border-radius:999px;background:rgba(3,11,20,.42);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.cam-gal{grid-column:1;justify-self:start;display:flex;align-items:center;gap:7px;height:38px;padding:0 14px 0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:rgba(3,11,20,.42);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-family:var(--sign);font-weight:600;font-size:16px;cursor:pointer}
+.cam-gal svg{width:19px;height:19px}
+.cam-gal:active{transform:scale(.96)}
+.cam-modes{grid-column:2;justify-self:center;display:flex;gap:4px;padding:3px;border-radius:999px;background:rgba(3,11,20,.42);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .cam-mode{border:0;background:transparent;color:rgba(255,255,255,.8);font-family:var(--sign);font-weight:600;font-size:16px;padding:5px 18px;border-radius:999px;cursor:pointer}
 .cam-mode[aria-checked=true]{background:#fff;color:var(--egeo)}
-.cam-album{justify-self:start;display:flex;align-items:center;gap:10px;background:none;border:0;color:#fff;cursor:pointer;padding:0;text-align:left}
+.cam-album{justify-self:start;position:relative;display:flex;align-items:center;gap:8px;height:48px;padding:0 16px 0 12px;border-radius:999px;border:1.5px solid rgba(255,255,255,.55);background:rgba(3,11,20,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;cursor:pointer;font-family:var(--sign);font-weight:700;font-size:17px;white-space:nowrap}
+.cam-album svg{width:22px;height:22px}
+.cam-album:active{transform:scale(.96)}
+.cam-album-n{position:absolute;top:-7px;right:-6px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--oro);color:var(--egeo);font-size:13px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
 .cam-thumb{width:54px;height:54px;border-radius:12px;border:2px solid rgba(255,255,255,.85);overflow:hidden;background:rgba(255,255,255,.1);display:grid;place-items:center;flex:none}
 .cam-thumb img{width:100%;height:100%;object-fit:cover}
 .cam-thumb svg{width:24px;height:24px}
@@ -288,7 +300,14 @@ body.recording .shutter i{width:30px;height:30px;border-radius:7px}
 .q-group-go{grid-row:span 2;grid-column:3;font-size:26px;color:var(--oro-claro);animation:slide 1.3s ease-in-out infinite}
 @keyframes grpin{from{transform:translateY(14px);opacity:0}}
 .q-stage{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
-.q-stage b{font-family:var(--sign);font-weight:700;font-size:17px;color:var(--oro-claro)}
+.q-stage{align-items:center}
+.q-stage b{font-family:var(--sign);font-weight:700;font-size:17px;color:var(--oro-claro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.q-stage b.pop{animation:stagepop .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes stagepop{0%{transform:translateX(18px);opacity:0}100%{transform:none;opacity:1}}
+.q-flash{flex:none;font-family:var(--sign);font-weight:700;font-size:13px;color:var(--egeo);background:var(--oro);border-radius:999px;padding:2px 10px;opacity:0;pointer-events:none}
+.q-flash.go{animation:flashin 2.2s ease forwards}
+@keyframes flashin{0%{opacity:0;transform:scale(.7)}12%{opacity:1;transform:scale(1.08)}20%{transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+.qcard{touch-action:pan-y}
 /* Acciones: ✅ y ➡️ */
 .q-go{display:flex;justify-content:center;align-items:center;gap:24px;margin-top:4px}
 .q-round{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;cursor:pointer;padding:0;font-size:42px;line-height:1}
@@ -311,7 +330,7 @@ body.recording .shutter i{width:30px;height:30px;border-radius:7px}
 .q-links .linkbtn{color:var(--oro-claro);font-size:16px}
 .cam-gallery{display:flex;align-items:center;gap:8px;background:none;border:0;color:rgba(255,255,255,.85);font-family:var(--sign);font-weight:600;font-size:17px;cursor:pointer;padding:6px 10px}
 .cam-gallery svg{width:20px;height:20px}
-body.recording .cam-modes,body.recording .cam-album,body.recording #camFlip,body.recording .cam-row,body.recording .cam-quest,body.recording .cam-tools{visibility:hidden}
+body.recording .cam-modes,body.recording .cam-gal,body.recording .cam-album,body.recording #camFlip,body.recording .cam-row,body.recording .cam-quest,body.recording .cam-tools{visibility:hidden}
 .cam-review{position:absolute;inset:0;z-index:4;background:var(--noche);display:flex;flex-direction:column}
 .cam-review-img{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px 0}
 .cam-review-img img,.cam-review-img video{max-width:100%;max-height:100%;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.6);background:#000}
@@ -335,7 +354,7 @@ body.recording .cam-modes,body.recording .cam-album,body.recording #camFlip,body
 .cam-quest small{display:block;font-family:var(--sign);font-weight:600;font-size:13px;color:var(--oro-claro)}
 .cam-quest span{display:block;font-family:var(--display);font-size:17px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cam-quest .qx{width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:20px;line-height:1;cursor:pointer;flex:none}
-.quest{position:absolute;inset:0;z-index:5;background:rgba(3,11,20,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow-y:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 18px calc(22px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px}
+.quest{position:absolute;inset:0;z-index:5;background:rgba(3,11,20,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;padding:calc(16px + env(safe-area-inset-top,0px)) 18px calc(22px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px}
 .q-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;max-width:480px;width:100%;margin:0 auto}
 .q-player{display:flex;gap:14px;align-items:center;flex:1;min-width:0}
 .q-player>div{flex:1;min-width:0}
@@ -352,7 +371,10 @@ body.recording .cam-modes,body.recording .cam-album,body.recording #camFlip,body
 .q-prog-ch{grid-column:1/-1;font-family:var(--sign);font-size:14.5px;color:var(--oro-claro)}
 .q-chaps-wrap{max-width:480px;width:100%;margin:0 auto}
 .q-chaps-wrap p{font-family:var(--sign);font-weight:600;font-size:15px;color:rgba(255,255,255,.7);margin-bottom:6px}
-.q-chaps{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.q-chaps{position:relative;display:flex;gap:8px;overflow-x:auto;padding:4px 40% 8px;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14%,#000 86%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 14%,#000 86%,transparent 100%)}
+.q-chaps button{scroll-snap-align:center;transition:background .2s,color .2s,transform .2s}
+.q-chaps button[aria-pressed=true]{transform:scale(1.06)}
+.q-swipe{font-family:var(--sign);font-weight:500;font-size:13.5px;color:rgba(255,255,255,.55);text-align:center;margin-top:2px}
 .q-chaps::-webkit-scrollbar{display:none}
 .q-chaps button{flex:none;border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;border-radius:999px;padding:6px 14px;font-family:var(--sign);font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap}
 .q-chaps button[aria-pressed=true]{background:var(--oro);border-color:var(--oro);color:var(--egeo)}
@@ -414,6 +436,87 @@ body.recording .cam-modes,body.recording .cam-album,body.recording #camFlip,body
 .qwin-card h3{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;margin:6px 0 8px}
 .qwin-card p:last-child{font-family:var(--sign);font-size:17px;color:rgba(255,255,255,.82)}
 
+/* ---------- Feed del álbum (estilo Instagram) ---------- */
+.feed{position:absolute;inset:0;z-index:6;background:var(--noche);color:#fff;display:flex;flex-direction:column;overflow:hidden}
+.feed-top{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;border-bottom:1px solid rgba(255,255,255,.1);background:rgba(3,11,20,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.feed-top h2{flex:1;min-width:0;font-family:var(--display);font-weight:400;font-size:22px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.feed-top h2 small{display:block;font-family:var(--sign);font-size:14px;color:var(--oro-claro);font-weight:600}
+.feed-link{flex:none;background:none;border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:999px;padding:7px 12px;font-family:var(--sign);font-weight:600;font-size:15px;cursor:pointer}
+.feed-list{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+.feed-in{max-width:560px;margin:0 auto}
+.post{border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:12px;margin-bottom:6px}
+.post-h{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.post-av{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--sign);font-weight:700;font-size:14px;color:var(--egeo);background:linear-gradient(135deg,var(--oro-claro),var(--oro));box-shadow:0 0 0 2px var(--noche),0 0 0 3.5px var(--oro)}
+.post-h div{min-width:0;flex:1}
+.post-h b{display:block;font-family:var(--sign);font-weight:700;font-size:16px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.post-h small{display:block;font-family:var(--sign);font-size:13.5px;color:rgba(255,255,255,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.post-m{position:relative;width:100%;background:#0F2033;overflow:hidden}
+.post-m img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s}
+.post-m img.ok{opacity:1}
+.post-m iframe,.post-m video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;object-fit:contain}
+.post-play{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;border:0;background:rgba(3,11,20,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font-size:26px;display:grid;place-items:center;cursor:pointer;padding-left:4px}
+.post-dur{position:absolute;right:10px;top:10px;background:rgba(3,11,20,.65);border-radius:999px;padding:2px 10px;font-family:var(--sign);font-weight:600;font-size:14px}
+.post-m .seal{right:12px;bottom:12px}
+.post-b{padding:10px 14px 0}
+.post-ch{font-family:var(--sign);font-weight:600;font-size:14.5px;color:var(--oro-claro)}
+.post-cap{font-size:15.5px;line-height:1.45;color:rgba(255,255,255,.9);margin-top:2px;overflow-wrap:anywhere}
+.post-cap b{font-family:var(--sign);font-weight:700;margin-right:6px}
+.post-t{display:block;font-family:var(--sign);font-size:13px;color:rgba(255,255,255,.5);margin-top:4px}
+.feed-empty{padding:60px 24px;text-align:center}
+.feed-empty p{font-family:var(--display);font-size:26px;line-height:1.2;margin-bottom:18px}
+.feed-more{height:60px;display:grid;place-items:center;font-family:var(--sign);color:rgba(255,255,255,.5)}
+.feed-new{position:absolute;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:2;border:0;border-radius:999px;background:var(--oro);color:var(--egeo);font-family:var(--sign);font-weight:700;font-size:15px;padding:8px 16px;box-shadow:0 8px 24px rgba(0,0,0,.4);cursor:pointer;animation:feednew .35s ease both}
+.feed-cam{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2;display:flex;align-items:center;gap:8px;border:0;border-radius:999px;background:#fff;color:var(--egeo);font-family:var(--sign);font-weight:700;font-size:18px;padding:12px 22px;box-shadow:0 12px 30px rgba(0,0,0,.45);cursor:pointer}
+.feed-cam svg{width:22px;height:22px}
+@keyframes feednew{from{opacity:0;transform:translate(-50%,8px)}}
+/* Scroll con imán, entradas animadas y barra de progreso */
+.feed-list{scroll-snap-type:y proximity}
+.post,.fi{scroll-snap-align:start;scroll-margin-top:0}
+.feed-prog{height:3px;background:rgba(255,255,255,.08)}
+.feed-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--oro),var(--oro-claro));transition:width .15s linear}
+.post{opacity:0;transform:translateY(26px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,1,.3,1)}
+.post.in{opacity:1;transform:none}
+.post.in .post-m img.ok{animation:kbz 7s ease-out both}
+@keyframes kbz{from{transform:scale(1.07)}to{transform:scale(1)}}
+.post-top{position:absolute;left:10px;top:10px;z-index:1;background:linear-gradient(135deg,#8C6A1F,var(--oro),#E9D08E);color:var(--egeo);border-radius:999px;padding:3px 11px;font-family:var(--sign);font-weight:700;font-size:14px;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.post.has-top .post-dur{top:44px}
+/* Likes */
+.post-act{display:flex;align-items:center;gap:10px;padding:10px 12px 0}
+.post-like{width:44px;height:44px;border:0;background:none;color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;margin-left:-4px;-webkit-tap-highlight-color:transparent}
+.post-like svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.8;transition:transform .15s}
+.post-like[aria-pressed=true]{color:#FF3B5C}
+.post-like[aria-pressed=true] svg{fill:currentColor}
+.post-like:active svg{transform:scale(.82)}
+.post-like.pop svg{animation:heartpop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes heartpop{0%{transform:scale(1)}40%{transform:scale(1.5)}100%{transform:scale(1)}}
+.post-lc{font-family:var(--sign);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;display:inline-block}
+.post-lc.bump{animation:bump .35s ease}
+@keyframes bump{40%{transform:scale(1.25);color:#FF7A93}}
+.post-tip{margin-left:auto;font-family:var(--sign);font-size:13px;color:rgba(255,255,255,.45)}
+.big-heart{position:absolute;left:50%;top:50%;z-index:3;width:120px;height:120px;margin:-60px 0 0 -60px;color:#fff;pointer-events:none;filter:drop-shadow(0 8px 24px rgba(0,0,0,.45));animation:bigheart .9s ease-out forwards}
+.big-heart svg{width:100%;height:100%;fill:currentColor}
+@keyframes bigheart{0%{opacity:0;transform:scale(.2)}15%{opacity:1;transform:scale(1.15)}30%{transform:scale(.95)}45%{transform:scale(1.02)}75%{opacity:1}100%{opacity:0;transform:scale(1.1) translateY(-30px)}}
+.fh{position:fixed;z-index:120;width:26px;height:26px;margin:-13px 0 0 -13px;color:#FF3B5C;pointer-events:none;animation:fhup 1.1s ease-out forwards}
+.fh svg{width:100%;height:100%;fill:currentColor}
+@keyframes fhup{0%{opacity:1;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(var(--dx),-140px) scale(1.2) rotate(var(--rot))}}
+/* Tarjetas intercaladas */
+.fi{margin:6px 12px 18px;border-radius:20px;padding:16px;background:linear-gradient(145deg,#12406F,#0B2A4A);border:1px solid rgba(228,199,127,.35);box-shadow:0 18px 36px rgba(0,0,0,.35)}
+.fi-k{font-family:var(--sign);font-weight:700;font-size:15px;color:var(--oro-claro);letter-spacing:.02em}
+.fi h3{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.12;margin:6px 0 4px}
+.fi p{color:rgba(255,255,255,.78);font-size:15px}
+.fi-row{display:flex;gap:10px;margin-top:14px}
+.fi-row .btn{flex:1;font-size:17px;padding:11px 12px}
+.fi-top{display:grid;grid-auto-flow:column;grid-auto-columns:120px;gap:10px;overflow-x:auto;margin-top:12px;padding-bottom:4px;scrollbar-width:none;touch-action:pan-x}
+.fi-top::-webkit-scrollbar{display:none}
+.fi-top button{position:relative;border:0;padding:0;border-radius:12px;overflow:hidden;aspect-ratio:4/5;background:#0F2033;cursor:pointer}
+.fi-top img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}
+.fi-top img.ok{opacity:1}
+.fi-top span{position:absolute;left:6px;bottom:6px;display:flex;align-items:center;gap:4px;background:rgba(3,11,20,.65);border-radius:999px;padding:2px 8px;color:#fff;font-family:var(--sign);font-weight:700;font-size:13px}
+.fi-top span svg{width:13px;height:13px;fill:#FF3B5C}
+.fi-top em{position:absolute;left:6px;top:6px;font-style:normal;background:#fff;color:var(--egeo);border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-family:var(--sign);font-weight:700;font-size:13px}
+.fi-end{text-align:center;padding:26px 18px}
+.fi-end .btn{margin-top:14px}
+
 /* ---------- Cinta de subida ---------- */
 .tray{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));margin:0 auto;max-width:460px;z-index:80;background:#fff;border:2px solid var(--oro);border-radius:16px;padding:12px 14px;box-shadow:0 18px 40px rgba(0,0,0,.28)}
 body.cam-open .tray{top:calc(78px + env(safe-area-inset-top,0px));bottom:auto}
@@ -442,6 +545,29 @@ body.cam-open .toast{bottom:calc(260px + env(safe-area-inset-bottom,0px))}
 .namecard-body input{width:100%;border:1.5px solid var(--linea);border-radius:10px;padding:13px 14px;font-size:18px;margin-top:6px}
 .namecard-body input:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 4px rgba(26,95,180,.14)}
 .namecard-actions{display:grid;gap:8px}
+.guide{z-index:78;padding:0;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;background:radial-gradient(120% 70% at 50% 0%,#12406F 0%,#071D34 45%,var(--noche) 100%);overflow:hidden}
+.gd-head{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top,0px)) 18px 14px;border-bottom:1px solid rgba(255,255,255,.1);background:rgba(3,11,20,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.gd-av{position:relative;width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(from var(--a),var(--oro),#FFF6DA,var(--oro-claro),var(--oro));animation:spin 4s linear infinite;padding:2px}
+.gd-av span{width:100%;height:100%;border-radius:50%;background:var(--egeo);display:grid;place-items:center;font-family:var(--display);font-size:17px;color:var(--oro-claro)}
+.gd-av::after{content:'';position:absolute;right:1px;bottom:1px;width:11px;height:11px;border-radius:50%;background:#35D07F;border:2px solid var(--noche)}
+.gd-who{flex:1;min-width:0;color:#fff}
+.gd-who b{display:block;font-family:var(--sign);font-weight:700;font-size:19px;line-height:1.1}
+.gd-who small{font-family:var(--sign);font-size:14px;color:#8FE3B5}
+.gd-skip{background:none;border:0;color:rgba(255,255,255,.65);font-family:var(--sign);font-weight:600;font-size:16px;cursor:pointer;padding:6px}
+.gd-msgs{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:18px 16px 10px;display:flex;flex-direction:column;gap:10px;max-width:560px;width:100%;margin:0 auto;overscroll-behavior:contain}
+.gd-b{max-width:86%;align-self:flex-start;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:20px 20px 20px 6px;padding:12px 15px;font-size:16px;line-height:1.5;animation:bubin .35s cubic-bezier(.2,1.2,.4,1) both}
+.gd-b strong{color:var(--oro-claro);font-weight:600}
+.gd-b.sign{background:linear-gradient(135deg,rgba(196,154,58,.22),rgba(255,255,255,.06));border-color:rgba(228,199,127,.4)}
+.gd-b.sign em{display:block;font-style:normal;font-family:var(--display);font-size:22px;color:var(--oro-claro);margin-top:6px}
+.gd-b.me{align-self:flex-end;background:var(--oro);color:var(--egeo);border:0;border-radius:20px 20px 6px 20px;font-family:var(--sign);font-weight:700;font-size:17px}
+.gd-typing{display:inline-flex;gap:5px;padding:14px 16px}
+.gd-typing i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.7);animation:dot 1.1s infinite ease-in-out}
+.gd-typing i:nth-child(2){animation-delay:.15s}.gd-typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-5px);opacity:1}}
+@keyframes bubin{from{opacity:0;transform:translateY(10px) scale(.96)}}
+.gd-quick{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:10px 16px calc(18px + env(safe-area-inset-bottom,0px));max-width:560px;width:100%;margin:0 auto}
+.gd-reply{border:0;border-radius:999px;padding:14px 30px;background:var(--oro);color:var(--egeo);font-family:var(--sign);font-weight:700;font-size:20px;cursor:pointer;box-shadow:0 10px 28px rgba(196,154,58,.4);animation:bubin .35s cubic-bezier(.2,1.2,.4,1) both,okblink 5s ease-in-out 1s infinite}
+.gd-reply:active{transform:scale(.96)}
 .lb{position:fixed;inset:0;z-index:72;background:rgba(3,11,20,.96);color:#fff;display:flex;flex-direction:column}
 .lb-top{display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 8px;font-family:var(--sign);font-size:17px;color:rgba(255,255,255,.7)}
 .lb-x{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;font-size:26px;line-height:1;cursor:pointer}
@@ -537,7 +663,7 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
   .lb-nav{width:40px;height:40px;font-size:24px;background:rgba(3,11,20,.55)}
   .lb-stage .seal.big{width:72px;height:72px}
 }
-@media (max-width:400px){ .cam-album-lbl{display:none} }
+@media (max-width:360px){ .cam-album{padding:0 12px 0 10px;font-size:15px} }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .hero-temple path{stroke-dashoffset:0}
@@ -580,6 +706,7 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
         <button class="btn btn-line" type="button" id="heroUpload">Subir de mi galería</button>
       </div>
       <p class="hero-status" id="heroStatus">Abriendo el álbum…</p>
+      <button type="button" class="linkbtn" id="guideOpen" style="color:var(--oro-claro);margin-top:8px">Ver la guía rápida</button>
     </div>
     <div class="pass-wrap" id="heroPassWrap">
       <article class="pass" id="heroPass" aria-label="Tu pase de abordar">
@@ -739,13 +866,18 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
     <button type="button" class="qx" id="cqClear" aria-label="Quitar el reto activo">×</button>
   </div>
   <div class="cam-bottom">
+    <button type="button" class="cam-gal" id="camGal" aria-label="Galería: subir fotos y videos de tu teléfono">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg>
+      Galería
+    </button>
     <div class="cam-modes" role="radiogroup" aria-label="Modo de la cámara">
       <button type="button" class="cam-mode" role="radio" data-mode="foto" aria-checked="true">Foto</button>
       <button type="button" class="cam-mode" role="radio" data-mode="video" aria-checked="false">Video</button>
     </div>
-    <button type="button" class="cam-album" id="camClose" aria-label="Ver la historia y el álbum">
-      <span class="cam-thumb" id="camThumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span>
-      <span class="cam-album-lbl" id="camAlbumLbl">Álbum</span>
+    <button type="button" class="cam-album" id="camClose" aria-label="Ver álbum: todas las fotos y videos compartidos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+      Ver álbum
+      <span class="cam-album-n" id="camAlbumN" hidden></span>
     </button>
     <button type="button" class="shutter" id="shutter" aria-label="Tomar foto"><i></i></button>
     <button type="button" class="cam-icon lg" id="camFlip" aria-label="Cambiar de cámara" title="Cambiar de cámara">
@@ -773,8 +905,9 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
       <button type="button" class="q-group" data-group="after"><span class="q-group-ic" aria-hidden="true">🌙</span><span class="q-group-k">After</span><span class="q-group-d">Lo que pasa después: la noche loca y el adiós</span><span class="q-group-go" aria-hidden="true">›</span></button>
     </div>
     <div class="q-chaps-wrap" id="qChapsWrap" hidden>
-      <div class="q-stage"><b id="qStageName">Pre</b><button type="button" class="linkbtn q-all" id="qGroupBack">‹ Cambiar etapa</button></div>
+      <div class="q-stage"><b id="qStageName">Pre</b><span class="q-flash" id="qFlash" aria-live="polite"></span><button type="button" class="linkbtn q-all" id="qGroupBack">‹ Cambiar etapa</button></div>
       <div class="q-chaps" id="qChaps" role="group" aria-label="Capítulos de esta etapa"></div>
+      <p class="q-swipe" aria-hidden="true">Desliza para pasar al siguiente capítulo ›</p>
     </div>
     <div class="q-body" id="qCardView">
       <article class="qcard" id="qCard">
@@ -822,6 +955,18 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
     </div>
   </div>
 
+  <section class="feed" id="feed" aria-label="Álbum compartido" hidden>
+    <header class="feed-top">
+      <button type="button" class="cam-icon" id="feedBack" aria-label="Volver a la cámara">‹</button>
+      <h2>Álbum compartido<small id="feedCount">Boda Jeni &amp; Leo</small></h2>
+      <button type="button" class="feed-link" id="feedHist">Historia y retos</button>
+    </header>
+    <button type="button" class="feed-new" id="feedNew" hidden></button>
+    <div class="feed-prog" aria-hidden="true"><i id="feedProg"></i></div>
+    <div class="feed-list" id="feedList"><div class="feed-in" id="feedIn"></div><div class="feed-more" id="feedMore" hidden>Cargando más…</div></div>
+    <button type="button" class="feed-cam" id="feedCam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Tomar foto</button>
+  </section>
+
   <div class="cam-review" id="camReview" hidden>
     <div class="cam-review-img"><img id="camShot" alt="La foto que acabas de tomar"><video id="camClip" playsinline controls loop hidden></video></div>
     <div class="cam-review-bar">
@@ -834,6 +979,19 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
         <button type="button" class="btn btn-oro" id="camSend">Enviar al álbum</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Guía rápida (la primera vez): un asistente que da la bienvenida -->
+<div class="modal guide" id="guide" role="dialog" aria-modal="true" aria-labelledby="guideTitle" hidden>
+  <header class="gd-head">
+    <span class="gd-av" aria-hidden="true"><span>J&amp;L</span></span>
+    <div class="gd-who"><b id="guideTitle">Asistente de Jeni &amp; Leo</b><small id="guideStatus">en línea</small></div>
+    <button type="button" class="gd-skip" id="guideSkip">Saltar</button>
+  </header>
+  <div class="gd-msgs" id="guideMsgs" aria-live="polite"></div>
+  <div class="gd-quick" id="guideQuick" hidden>
+    <button type="button" class="gd-reply" id="guideStart">¡Empezar! 🚀</button>
   </div>
 </div>
 
@@ -935,7 +1093,7 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
    CONFIGURACIÓN: edita estos valores antes de publicar
    ========================================================= */
 var CONFIG = {
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzSfce8btDQu71h4KI0QduMpwK-usImF24Hxz9kHB00vLxil52KPkLuiHveS82KuYFDrQ/exec',            // URL /exec del Apps Script. Vacío = modo demostración
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyFqYzwI51tiT-XYGHbvjCk8kHhJZH5lTjPXrwKShyD4P2p_CMGdbK_zpxXsEUCF4Mwtg/exec',            // URL /exec del Apps Script. Vacío = modo demostración
   ACCESS_KEY: 'JLO2026',     // igual a CFG.ACCESS_KEY del Apps Script
   PUBLIC_URL: '',            // URL pública de esta página para los QR. Vacío = la URL actual
   HASHTAG: '#JLOenAtenas',
@@ -958,7 +1116,7 @@ var MODE = (params.get('modo') || '').toLowerCase();
 var KEY = params.get('k') || CONFIG.ACCESS_KEY;
 var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var PLANE = 'M12 2c.8 0 1.5.7 1.5 1.5V9l7.5 4.5v2L13.5 13v5l2.5 1.8V21L12 20l-4 1v-1.2l2.5-1.8v-5L3 15.5v-2L10.5 9V3.5C10.5 2.7 11.2 2 12 2z';
-var LS = {name:'jlo_album_name', mine:'jlo_album_mine', mode:'jlo_album_mode', quest:'jlo_album_quest', done:'jlo_album_retos', chap:'jlo_album_chap', hint:'jlo_album_hint', atrev:'jlo_album_atrevidos_ok', group:'jlo_album_group'};
+var LS = {likes:'jlo_album_likes', seen:'jlo_album_seen', guide:'jlo_album_guide', name:'jlo_album_name', mine:'jlo_album_mine', mode:'jlo_album_mode', quest:'jlo_album_quest', done:'jlo_album_retos', chap:'jlo_album_chap', hint:'jlo_album_hint', atrev:'jlo_album_atrevidos_ok', group:'jlo_album_group'};
 var MONTHS = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 
 /* ---------- utilidades ---------- */
@@ -1018,6 +1176,8 @@ function barcodeHTML(str){
    LA HISTORIA: capítulos y retos
    Formato de cada reto: 'rareza|título|pista'
      rareza: 1 común, 2 especial, 3 legendario. Agrega "v" para reto en video (ej. '2v').
+   Opcional, un cuarto campo con las etapas donde aparece: 'rareza|título|pista|pre,durante,after'.
+     Sin ese campo, el reto sale en todas las etapas donde esté su capítulo.
    El ID de cada reto es clave-número (ej. yate-3). Para agregar retos, ponlos al
    final de su capítulo: reordenar cambia los IDs de las fotos ya subidas.
    ========================================================= */
@@ -1037,10 +1197,23 @@ var CAPS = [
     '2|La invitación de la boda|En papel o en tu pantalla.',
     '1|Tu cara de "ya casi"|Emoción pura antes de salir.',
     '2|La compra de último minuto para el viaje|Ese adaptador que casi olvidas.',
-    '2v|Video: tu deseo para los novios antes de viajar|Un mensaje corto desde casa.',
+    '2v|Video: tu cuenta regresiva para Atenas|¿Cuántos días faltan? Dilo con emoción.',
     '1|El clima de Atenas en tu teléfono|Decidiendo si llevar abrigo.',
     '3|Todos tus compañeros de viaje antes de salir|Familia, pareja o amigos, juntos en casa.',
-    '1|La puerta de tu casa al salir|El primer paso de la historia.'
+    '1|La puerta de tu casa al salir|El primer paso de la historia.',
+    '2|Tus conexiones de vuelo hacia Atenas|El itinerario o el tablero con tus escalas. Tapa localizadores y datos personales.',
+    '1|Compras de zapatos para la boda|En la tienda o el unboxing en casa.',
+    '1|Los accesorios del gran día|Aretes, gemelos, bolso, lentes o reloj.',
+    '2|Selfie en el probador de la tienda|El clásico probándote el look para la boda.',
+    '2v|Video: outfit check de todos tus looks|Los que llevas a Atenas, versión influencer.',
+    '2|Flat lay de tu maleta|Todo acomodado y fotografiado desde arriba, estilo feed.',
+    '2v|Video: GRWM para el viaje|Get ready with me antes de salir al aeropuerto.',
+    '1|Tu look de aeropuerto|Cómodo, pero con estilo.',
+    '2|La prueba final del vestido o del traje|Con el sastre, la modista o frente al espejo.',
+    '1|Manicure, peluquería o barbería antes del viaje|Los detalles también cuentan.',
+    '2v|Video: unboxing de tus compras para la boda|Como en tus mejores reels.',
+    '2|Tu ring light o setup de fotos listo para el viaje|El equipo de creador también viaja.',
+    '3|La foto que sabes que va a romper el feed|Tu contenido más viral antes de la boda.'
   ]},
   {k:'aero', n:'El aeropuerto', s:'SALIDA', h:'Pasaportes en mano y el corazón acelerado: la aventura empezó oficialmente.', r:[
     '1|El letrero de tu aeropuerto de salida|Para saber dónde empezó todo.',
@@ -1182,7 +1355,7 @@ var CAPS = [
     '1|De regreso a Plaka|Aterrizaje del tour.'
   ]},
   {k:'acropolis', n:'La Acrópolis', s:'ACRÓPOLIS', h:'Subimos juntos a la roca sagrada. Veinticinco siglos de historia como telón de fondo de la nuestra.', r:[
-    '1|La Acrópolis de fondo|Desde abajo o desde lejos.',
+    '1|La fila para entrar a la Acrópolis|Paciencia bajo el sol griego.',
     '1|Tu entrada a la Acrópolis|El boleto antes de subir.',
     '1|Subiendo la roca sagrada|Escalones y esfuerzo.',
     '1|Los Propileos|La entrada monumental.',
@@ -1202,7 +1375,7 @@ var CAPS = [
     '2|Selfie sudada y feliz|El sol de octubre no perdona.'
   ]},
   {k:'atenas', n:'Atenas eterna', s:'ATENAS', h:'Entre ruinas, terrazas y metro, Atenas nos regaló días y noches para explorarla juntos.', r:[
-    '1|Atardecer sobre Atenas|Donde el cielo se pone dorado.',
+    '1|Una calle de Atenas con naranjos|Los árboles de naranja amarga que llenan la ciudad.',
     '2|El Monte Licabeto|El punto más alto de la ciudad.',
     '1|El Ágora Antigua|Donde caminaba Sócrates.',
     '1|El Templo de Hefesto|El mejor conservado.',
@@ -1218,7 +1391,7 @@ var CAPS = [
     '2|Un músico callejero|Buzuki, acordeón o guitarra.',
     '1|Un rincón que nadie más fotografió|Tu hallazgo personal.',
     '3|Atenas desde el Licabeto al anochecer|La ciudad encendiéndose.',
-    '1|Un brindis en un rooftop|Con vista, por supuesto.',
+    '1|Un café griego tradicional|Servido en briki, con su borra.',
     '2|Explorando con otros invitados|Aventura en grupo.'
   ]},
   {k:'yate', n:'Un día en el Egeo', s:'YATE', h:'Sal, sol y los mejores amigos a bordo. El mar Egeo también quiso estar en la historia.', r:[
@@ -1291,11 +1464,11 @@ var CAPS = [
     '2|Las manos de los novios|Con anillos, claro.',
     '1|El vestido de la novia en detalle|Encaje, cola o espalda.',
     '1|El traje del novio en detalle|Gemelos, botonier o zapatos.',
-    '2v|Video: tu mensaje para los novios|Un consejo, un deseo o un recuerdo.',
+    '2v|Video: un brindis improvisado para los novios|Levanta tu copa y di unas palabras.',
     '2v|Video: cómo conociste a los novios|Treinta segundos de historia.',
     '2|Recrea una pose de los novios|Copia su foto favorita.',
-    '2|Los novios con la Acrópolis|Si la vista lo permite.',
-    '1|Los novios brindando|Copas arriba.',
+    '2|Los novios en la hora dorada|La luz perfecta sobre los recién casados.',
+    '1|Los novios saludando mesa por mesa|Captura su paso por la tuya.',
     '3|Un beso robado de los novios|En cualquier momento de la noche.',
     '2|Los novios con sus papás|Tres generaciones de amor.',
     '1|Los zapatos de la novia|Antes o después del baile.',
@@ -1371,7 +1544,7 @@ var CAPS = [
     '2|Una última comida con otros invitados|Despedida en la mesa.',
     '1|El aeropuerto de regreso|Hasta pronto, Grecia.',
     '2v|Video: lo que más te gustó del viaje|En una frase.',
-    '2v|Video: tu despedida para los novios|Abrazo virtual incluido.',
+    '2v|Video: tu último "Kalimera" desde Atenas|Despídete de la ciudad en griego.',
     '1|Tu pase de abordar de regreso|Tapa el código de barras.',
     '2|La foto que resume tu viaje|Elige la que cuenta todo.',
     '1|Llegando a casa|El viaje terminó; la historia no.',
@@ -1382,135 +1555,156 @@ var CAPS = [
   ]},
   // Privado: solo lo ven los novios y se elimina a las 24 horas (lo hace el Apps Script)
   {k:'atrevidos', p:1, gate:'Aquí se viene a ligar, a atreverse y a pasarla increíble. Antes de entrar:', n:'Atrevidos', s:'ATREVIDOS', h:'Lo que pasa en Atenas se queda con los novios. Una noche loca, ligues entre invitados y algún desconocido con acento griego.', r:[
-    '2|Una foto con el o la más sexy de la boda|Tú decides quién se lleva el título.',
-    '3|Beso de tres|Tres personas, un beso y cero arrepentimientos.',
-    '2|Intercambio de prenda|Cambia una prenda con alguien que te guste.',
-    '3|Bodyshot|Sal, limón y tequila, con quien diga que sí.',
-    '2|Selfie con un desconocido guapo en Atenas|Griego, turista o viajero, con su permiso.',
-    '2|Consigue el Instagram de alguien que te guste|La prueba: foto del momento, no de sus datos.',
-    '1|Guiñándole el ojo a tu crush|Que se note la intención.',
-    '2|Baile pegadito con alguien que acabas de conocer|Una canción lenta basta.',
-    '2v|Video: tu mejor frase para ligar|Pruébala con alguien de verdad.',
-    '2|Un beso en la mejilla de alguien que no conocías|Con permiso, siempre.',
-    '2|Brindis con los brazos entrelazados|Copas cruzadas, miradas también.',
-    '3|Un beso bajo la luna de Atenas|Con quien tú elijas.',
-    '1|Marca de labial en la mejilla de alguien|La evidencia no miente.',
-    '2|Tu número en una servilleta|Entrégaselo a alguien y captura el momento.',
-    '2|Tu pose más sexy con la Acrópolis de fondo|La diosa o el dios que llevas dentro.',
-    '2v|Video: un piropo o serenata para alguien de la fiesta|Diez segundos de valentía.',
-    '2|Dos solteros que hicieron match en el viaje|Sé cupido y documenta.',
-    '3|Un beso con alguien que conociste en Grecia|Kalimera, amor.',
-    '1|Tu outfit más atrevido del viaje|Sin miedo.',
-    '2|Selfie en la pista con tu crush de la boda|Que no se entere… o sí.',
-    '3|La puerta del cuarto del que te comiste|El número de habitación basta. Los detalles, a los novios.',
-    '2|Dos pares de zapatos junto a una cama|La foto que lo dice todo sin mostrar nada.',
-    '2|Dos cepillos de dientes en un solo baño|Evidencia de convivencia express.',
-    '2|Una prenda que no es tuya en tu cuarto|¿De quién será? Solo los novios lo sabrán.',
-    '2v|Video: el paseo de la vergüenza por Plaka al amanecer|Tacones en la mano, dignidad en el bolsillo.',
-    '1|Tu cara de "¿qué pasó anoche?"|Toalla en la cabeza y café en mano.',
-    '2|Desayuno para dos en el hotel|Y ninguno de los dos es tu pareja de viaje.',
-    '2|Selfie en el ascensor con tu ligue|Entre un piso y otro pasan cosas.',
-    '1|Captura de un "¿ya dormiste?" a las 3 a. m.|Tapa nombres y números.',
-    '2|El juguete más raro de un sex shop de Atenas|Solo la foto del estante, sin compromiso.',
-    '3|Un regalo atrevido para los novios|Envuelto, con dedicatoria y cara de inocente.',
-    '1|Esposas de peluche en la fiesta|Accesorio oficial de la noche loca.',
-    '2|Unas orejitas, un antifaz o un disfraz atrevido|El accesorio que nadie esperaba en una boda.',
-    '2v|Video: la botella gira|Juego de la botella con invitados. Lo que salga.',
-    '2v|Video: tu verdad más picante|Verdad o reto: elegiste verdad.',
-    '2v|Video: una ronda de "Yo nunca nunca"|Mínimo cuatro jugadores y un vaso cada uno.',
-    '3|Beso entre alguien del lado de la novia y alguien del lado del novio|Uniendo familias, literalmente.',
-    '2|Cupido en acción: dos invitados solteros bailando juntos|Tú los presentaste. Captura el resultado.',
-    '2|Arma una cita a ciegas entre dos invitados|Mesa, dos copas y tú de mesero.',
-    '2|Un beso con sabor a ouzo|Brinda primero. Lo demás, tú sabrás.',
-    '2|Tu número escrito con labial|En una servilleta, un brazo o un espejo.',
-    '2|Masaje con aceite de oliva griego|En los hombros, que es una boda.',
-    '2|Baile sensual en silla para alguien de la tribu|Con música y público.',
-    '3|Beso en el yate al atardecer|El Egeo como único testigo.',
-    '2v|Video: dirty dancing en cubierta|Sin caerse al mar.',
-    '2|Chapuzón nocturno con alguien especial|Piscina del hotel o mar. Con cuidado.',
-    '2|Recrea la portada de una novela romántica|Pelo al viento, camisa abierta y mirada intensa.',
-    '1|La mordida de labio más coqueta|Para tu crush, desde el otro lado de la pista.',
-    '2|Evidencia de un chupetón|Discreto o no tanto.',
-    '3|El que se ligó a alguien del tour|Conocidos en el bus, inseparables en la fiesta.',
-    '2|Intercambio de habitaciones por una noche|La llave de otro cuarto en tu mano.',
-    '2v|Video: tu confesión de la noche loca|Treinta segundos que solo verán los novios.',
-    '2|El casado más sexy de la boda|Foto con él. Si su esposa sale en el cuadro, vale doble de valentía.',
-    '2|La casada más hot de la boda|Foto con ella. Su esposo decide si posa o si mira de lejos.',
-    '2|La pareja casada que todavía se come a besos|Los que parecen recién casados sin serlo.',
-    '2|Foto que parece infidelidad pero no lo es|Ángulo sospechoso, contexto inocente. Que los novios adivinen.',
-    '3|La foto más comprometedora del viaje|Actuada, con la pareja cómplice detrás de cámara.',
-    '2|El "amigo" que abraza demasiado a una casada|Actúen celos exagerados. Oscar al mejor drama.',
-    '2v|Video: la pareja oficial descubre la foto sospechosa|Reacción de telenovela, en cámara lenta si se puede.',
-    '1|Alguien quitándose el anillo "para la foto"|Y volviéndoselo a poner antes de que alguien vea.',
-    '2|Dos casados haciendo la pose del "no me conoces"|Lentes oscuros y cero contacto visual.',
-    '2v|Video: "esto no es lo que parece"|La frase clásica, con la mejor cara de culpable.',
-    '2|El soltero más cotizado de la fiesta|Foto con él y con la fila de pretendientes.',
-    '1|Tu pareja durmiendo mientras tú sigues de fiesta|La coartada perfecta.',
-    '2|Tu primera vez haciendo un bodyshot|Tu cara lo dice todo.',
-    '2|La que nunca había bailado sirtaki en brazos de un griego|Y ahora no quiere soltarlo.',
-    '2|El que nunca había besado a alguien en otro país|Hasta hoy. Kalimera.',
-    '2v|Video: tu primera vez diciendo un piropo en griego|Pronunciación opcional, valentía obligatoria.',
-    '1|La primera vez que alguien te pidió el número en Grecia|Sonrisa de victoria incluida.',
-    '2|Tu primera vez en un jacuzzi con alguien que acabas de conocer|Burbujas y buena conversación.',
-    '2v|Video: la primera vez de alguien probando ouzo|La cara es el premio.',
-    '3|Alguien haciendo algo por primera vez esta noche|Que lo confiese en cámara, sin detalles.',
-    '2|El invitado con más ligues en el viaje|Pide su conteo oficial.',
-    '2|El ligue que nadie vio venir|Los más inesperados de la boda.',
-    '2|La tía o el tío más coqueto de la fiesta|Y su víctima favorita.',
-    '1|Alguien ligando con el mesero o la mesera|Propina en forma de sonrisa.',
-    '2v|Video: tu peor intento de ligue del viaje|Mientras más vergonzoso, más puntos de honor.',
-    '2|El soltero de oro y la soltera de oro|Súbelos juntos a la foto y deja que el destino haga lo suyo.',
-    '2|La soltera más cotizada de la fiesta|Foto con ella y con la fila de pretendientes.'
+    '2|Una foto con el o la más sexy de la boda|Tú decides quién se lleva el título.|durante',
+    '3|Beso de tres|Tres personas, un beso y cero arrepentimientos.|after',
+    '2|Intercambio de prenda|Cambia una prenda con alguien que te guste.|durante',
+    '3|Bodyshot|Sal, limón y tequila, con quien diga que sí.|durante',
+    '2|Selfie con un desconocido guapo en Atenas|Griego, turista o viajero, con su permiso.|pre',
+    '2|Consigue el Instagram de alguien que te guste|La prueba: foto del momento, no de sus datos.|pre',
+    '1|Guiñándole el ojo a tu crush|Que se note la intención.|durante',
+    '2|Baile pegadito con alguien que acabas de conocer|Una canción lenta basta.|durante',
+    '2v|Video: tu mejor frase para ligar|Pruébala con alguien de verdad.|durante',
+    '2|Un beso en la mejilla de alguien que no conocías|Con permiso, siempre.|pre',
+    '2|Brindis con los brazos entrelazados|Copas cruzadas, miradas también.|durante',
+    '3|Un beso bajo la luna de Atenas|Con quien tú elijas.|after',
+    '1|Marca de labial en la mejilla de alguien|La evidencia no miente.|durante',
+    '2|Tu número en una servilleta|Entrégaselo a alguien y captura el momento.|durante',
+    '2|Tu pose más sexy con la Acrópolis de fondo|La diosa o el dios que llevas dentro.|pre',
+    '2v|Video: un piropo o serenata para alguien de la fiesta|Diez segundos de valentía.|durante',
+    '2|Dos solteros que hicieron match en el viaje|Sé cupido y documenta.|after',
+    '3|Un beso con alguien que conociste en Grecia|Kalimera, amor.|after',
+    '1|Tu outfit más atrevido del viaje|Sin miedo.|pre',
+    '2|Selfie en la pista con tu crush de la boda|Que no se entere… o sí.|durante',
+    '3|La puerta del cuarto del que te comiste|El número de habitación basta. Los detalles, a los novios.|after',
+    '2|Dos pares de zapatos junto a una cama|La foto que lo dice todo sin mostrar nada.|after',
+    '2|Dos cepillos de dientes en un solo baño|Evidencia de convivencia express.|after',
+    '2|Una prenda que no es tuya en tu cuarto|¿De quién será? Solo los novios lo sabrán.|after',
+    '2v|Video: el paseo de la vergüenza por Plaka al amanecer|Tacones en la mano, dignidad en el bolsillo.|after',
+    '1|Tu cara de "¿qué pasó anoche?"|Toalla en la cabeza y café en mano.|after',
+    '2|Desayuno para dos en el hotel|Y ninguno de los dos es tu pareja de viaje.|after',
+    '2|Selfie en el ascensor con tu ligue|Entre un piso y otro pasan cosas.|pre',
+    '1|Captura de un "¿ya dormiste?" a las 3 a. m.|Tapa nombres y números.|after',
+    '2|El juguete más raro de un sex shop de Atenas|Solo la foto del estante, sin compromiso.|pre',
+    '3|Un regalo atrevido para los novios|Envuelto, con dedicatoria y cara de inocente.|pre',
+    '1|Esposas de peluche en la fiesta|Accesorio oficial de la noche loca.|durante',
+    '2|Unas orejitas, un antifaz o un disfraz atrevido|El accesorio que nadie esperaba en una boda.|durante',
+    '2v|Video: la botella gira|Juego de la botella con invitados. Lo que salga.|pre',
+    '2v|Video: tu verdad más picante|Verdad o reto: elegiste verdad.|after',
+    '2v|Video: una ronda de "Yo nunca nunca"|Mínimo cuatro jugadores y un vaso cada uno.|after',
+    '3|Beso entre alguien del lado de la novia y alguien del lado del novio|Uniendo familias, literalmente.|durante',
+    '2|Cupido en acción: dos invitados solteros bailando juntos|Tú los presentaste. Captura el resultado.|durante',
+    '2|Arma una cita a ciegas entre dos invitados|Mesa, dos copas y tú de mesero.|pre',
+    '2|Un beso con sabor a ouzo|Brinda primero. Lo demás, tú sabrás.|pre',
+    '2|Un brindis mirándose a los ojos|Si alguien aparta la mirada, pierde.|durante',
+    '2|Masaje con aceite de oliva griego|En los hombros, que es una boda.|pre',
+    '2|Baile sensual en silla para alguien de la tribu|Con música y público.|durante',
+    '3|Beso en el yate al atardecer|El Egeo como único testigo.|pre',
+    '2v|Video: dirty dancing en cubierta|Sin caerse al mar.|pre',
+    '2|Chapuzón nocturno con alguien especial|Piscina del hotel o mar. Con cuidado.|after',
+    '2|Recrea la portada de una novela romántica|Pelo al viento, camisa abierta y mirada intensa.|pre',
+    '1|La mordida de labio más coqueta|Para tu crush, desde el otro lado de la pista.|durante',
+    '2|Evidencia de un chupetón|Discreto o no tanto.|after',
+    '3|El que se ligó a alguien del tour|Conocidos en el bus, inseparables en la fiesta.|durante',
+    '2|Intercambio de habitaciones por una noche|La llave de otro cuarto en tu mano.|after',
+    '2v|Video: tu confesión de la noche loca|Treinta segundos que solo verán los novios.|after',
+    '2|El casado más sexy de la boda|Foto con él. Si su esposa sale en el cuadro, vale doble de valentía.|durante',
+    '2|La casada más hot de la boda|Foto con ella. Su esposo decide si posa o si mira de lejos.|durante',
+    '2|La pareja casada que todavía se come a besos|Los que parecen recién casados sin serlo.|durante',
+    '2|Foto que parece infidelidad pero no lo es|Ángulo sospechoso, contexto inocente. Que los novios adivinen.|pre',
+    '3|La foto más comprometedora del viaje|Actuada, con la pareja cómplice detrás de cámara.|after',
+    '2|El "amigo" que abraza demasiado a una casada|Actúen celos exagerados. Oscar al mejor drama.|durante',
+    '2v|Video: la pareja oficial descubre la foto sospechosa|Reacción de telenovela, en cámara lenta si se puede.|durante',
+    '1|Alguien quitándose el anillo "para la foto"|Y volviéndoselo a poner antes de que alguien vea.|durante',
+    '2|Dos casados haciendo la pose del "no me conoces"|Lentes oscuros y cero contacto visual.|pre',
+    '2v|Video: "esto no es lo que parece"|La frase clásica, con la mejor cara de culpable.|after',
+    '2|El soltero más cotizado de la fiesta|Foto con él y con la fila de pretendientes.|durante',
+    '1|Tu pareja durmiendo mientras tú sigues de fiesta|La coartada perfecta.|after',
+    '2|La primera vez que alguien te sacó a bailar sin conocerte|Y dijiste que sí.|durante',
+    '2|La que nunca había bailado sirtaki en brazos de un griego|Y ahora no quiere soltarlo.|pre',
+    '2|Tu primera cita en Atenas|Cena, trago o paseo por Plaka con alguien especial.|pre',
+    '2v|Video: tu primera vez diciendo un piropo en griego|Pronunciación opcional, valentía obligatoria.|pre',
+    '1|La primera vez que alguien te pidió el número en Grecia|Sonrisa de victoria incluida.|pre',
+    '2|Tu primera vez en un jacuzzi con alguien que acabas de conocer|Burbujas y buena conversación.|pre',
+    '2|Una cita doble con otra pareja de invitados|Cuatro copas y cero incomodidad.|pre',
+    '3|Alguien haciendo algo por primera vez esta noche|Que lo confiese en cámara, sin detalles.|durante',
+    '2|El invitado con más ligues en el viaje|Pide su conteo oficial.|after',
+    '2|El ligue que nadie vio venir|Los más inesperados de la boda.|after',
+    '2|La tía o el tío más coqueto de la fiesta|Y su víctima favorita.|durante',
+    '1|Alguien ligando con el mesero o la mesera|Propina en forma de sonrisa.|pre',
+    '2v|Video: tu peor intento de ligue del viaje|Mientras más vergonzoso, más puntos de honor.|after',
+    '2|El baile de los solteros|Todos los solteros en la pista al mismo tiempo.|durante',
+    '2|La soltera más cotizada de la fiesta|Foto con ella y con la fila de pretendientes.|durante',
+    '2|Tu crush del avión|Alguien de tu vuelo que te robó la mirada. Foto discreta.|pre',
+    '2|Selfie con el o la más guapa del tour|El bus también sirve para ligar.|pre',
+    '2v|Video: tu estrategia para ligar en la boda|Cuéntala antes de que empiece la fiesta.|pre',
+    '1|Tu perfume de conquista para el viaje|El arma secreta que va en la maleta.|pre',
+    '2|Un coqueteo en la escala|Otro aeropuerto, otro crush.|pre',
+    '3|El primer beso del viaje|Antes del sí de los novios ya hubo romance.|pre',
+    '2|Sentado junto a tu crush en el bus del tour|Casualidad perfectamente planeada.|pre',
+    '2|Bloqueador en la espalda de alguien en el yate|Con permiso y buena técnica.|pre',
+    '2|El reencuentro con tu ligue de la boda al día siguiente|¿Incómodo o encantador?|after',
+    '2v|Video: lo que pasó después de la fiesta|Versión apta para los novios.|after',
+    '1|El mensaje de "¿llegaste bien?"|Tapa nombres y números.|after'
   ]},
   {k:'hielo', n:'Romper hielo', s:'HIELO', h:'Más de cien personas, un mismo viaje y muchas historias por conocer. Al final de este capítulo, nadie es un desconocido.', r:[
-    '2|El mejor bailarín de la boda|Pregunta hasta encontrar a quien asegure serlo. Cuando tengas candidato, rétalo a demostrarlo contigo.',
-    '2v|Video: aprende el mejor paso de alguien|Pídele a alguien que te enseñe su mejor paso. Video obligatorio.',
-    '2|El fan número uno de los aviones|Investiga hasta descubrir quién podría hablar de aviones durante horas. Selfie como evidencia.',
-    '2|Alguien que hable tres idiomas o más|Descubre a quien sostenga una conversación en al menos tres idiomas. Que te salude en todos.',
-    '2|Quién viajó más kilómetros para llegar a la boda|Compara rutas hasta encontrar al campeón. Selfie con el ganador.',
-    '3|La doctora famosa|Hay una doctora bastante famosa entre los invitados. ¿Logras descubrir quién es?',
-    '2|Adivina a qué se dedica|Habla un minuto con un desconocido. Tienes tres intentos para adivinar su trabajo.',
-    '2|La cadena de presentaciones|Pídele a alguien que acabas de conocer que te presente a otra persona. Los tres terminan en la foto.',
-    '1|Alguien que cumpla años en octubre|Pregunta mesa por mesa.',
-    '2|Quien conoce a los novios desde hace más tiempo|Que te cuente cómo empezó todo.',
-    '2|Quien conoció a los novios más recientemente|El más nuevo de la tribu.',
-    '1|Alguien de tu mismo signo zodiacal|Selfie de gemelos cósmicos.',
-    '2|Quien ha visitado más países|Pide la cifra y posen con ella en los dedos.',
-    '1|Alguien en su primer viaje a Europa|Selfie de novatos.',
-    '2|Alguien con tu mismo nombre o tu misma inicial|Foto con la prueba.',
-    '2v|Video: una anécdota de los novios contada por alguien que acabas de conocer|Treinta segundos de historia.',
-    '2|Alguien que sepa un truco de magia|Que te lo haga y captura tu cara.',
-    '2|Quien tiene la mascota más rara|Que te muestre la foto en su teléfono.',
-    '1|Choca los cinco con cinco personas que no conocías|Selfie con la quinta.',
-    '3|Aprende los nombres de toda una mesa que no es la tuya|Foto con la mesa completa, y dilos sin fallar.',
-    '2|Alguien que sepa decir "te amo" en griego|Que te lo enseñe.',
-    '2v|Video: presenta a alguien que acabas de conocer como si fuera famoso|Anúncialo como la estrella de la noche.',
-    '2|Quien tiene la historia más loca del viaje|Que te la cuente y posen con cara de asombro.'
+    '2|El mejor bailarín de la boda|Pregunta hasta encontrar a quien asegure serlo. Cuando tengas candidato, rétalo a demostrarlo contigo.|durante',
+    '2v|Video: aprende el mejor paso de alguien|Pídele a alguien que te enseñe su mejor paso. Video obligatorio.|durante',
+    '2|El fan número uno de los aviones|Investiga hasta descubrir quién podría hablar de aviones durante horas. Selfie como evidencia.|pre',
+    '2|Alguien que hable tres idiomas o más|Descubre a quien sostenga una conversación en al menos tres idiomas. Que te salude en todos.|pre',
+    '2|Quien tuvo la conexión de vuelo más loca|Escalas, retrasos o maletas perdidas: que te cuente.|pre',
+    '3|La doctora famosa|Hay una doctora bastante famosa entre los invitados. ¿Logras descubrir quién es?|durante',
+    '2|Adivina a qué se dedica|Habla un minuto con un desconocido. Tienes tres intentos para adivinar su trabajo.|pre',
+    '2|La cadena de presentaciones|Pídele a alguien que acabas de conocer que te presente a otra persona. Los tres terminan en la foto.|durante',
+    '1|Alguien que cumpla años en octubre|Pregunta mesa por mesa.|pre',
+    '2|Quien conoce a los novios desde hace más tiempo|Que te cuente cómo empezó todo.|durante',
+    '2|Quien conoció a los novios más recientemente|El más nuevo de la tribu.|durante',
+    '1|Alguien de tu mismo signo zodiacal|Selfie de gemelos cósmicos.|pre',
+    '2|Quien ha visitado más países|Pide la cifra y posen con ella en los dedos.|pre',
+    '1|Alguien en su primer viaje a Europa|Selfie de novatos.|pre',
+    '2|Alguien con tu mismo nombre o tu misma inicial|Foto con la prueba.|pre',
+    '2v|Video: una anécdota de los novios contada por alguien que acabas de conocer|Treinta segundos de historia.|durante',
+    '2|Alguien que sepa un truco de magia|Que te lo haga y captura tu cara.|durante',
+    '2|Quien tiene la mascota más rara|Que te muestre la foto en su teléfono.|pre',
+    '1|Choca los cinco con cinco personas que no conocías|Selfie con la quinta.|durante',
+    '3|Aprende los nombres de toda una mesa que no es la tuya|Foto con la mesa completa, y dilos sin fallar.|durante',
+    '2|Alguien que haya vivido en otro país|Que te cuente su mejor anécdota.|pre',
+    '2v|Video: presenta a alguien que acabas de conocer como si fuera famoso|Anúncialo como la estrella de la noche.|durante',
+    '2|Quien tiene la historia más loca del viaje|Que te la cuente y posen con cara de asombro.|pre'
   ]},
   // Privado como Atrevidos: solo lo ven los novios y se elimina a las 24 horas
   {k:'confesionario', p:1, gate:'Siéntate, mira a la cámara y confiesa. Lo que se dice aquí solo lo escuchan los novios. Antes de entrar:', n:'El confesionario', s:'CONFESIÓN', h:'Chismes, sospechas y opiniones polémicas, dichos mirando a la cámara. Lo que se confiesa aquí solo lo escuchan los novios.', r:[
-    '2v|¿Ya detectaste algún romance que nadie más haya notado?|Cuéntalo mirando a la cámara. Nombres opcionales.',
-    '1v|¿Qué fue lo primero que pensaste cuando viste a los novios?|La primera impresión, sin filtro.',
-    '1v|Resume todo lo que pasó esta noche en una frase|Una sola. Que valga.',
-    '2v|¿Quién va a decir mañana "yo no me acuerdo de eso"?|Tu candidato y el porqué.',
-    '2v|Si organizaras una cita entre dos invitados, ¿a quiénes juntarías?|Explica tu plan de cupido.',
-    '2v|¿Quién está coqueteando y cree que nadie se ha dado cuenta?|Tú sí te diste cuenta.',
-    '2v|Confiesa: ¿ya viste a alguien y pensaste "wow"?|No hace falta decir quién… pero ayuda.',
-    '2v|¿Quién se está comportando como protagonista de reality?|Justifica tu respuesta.',
-    '2v|Si esta boda fuera un reality, ¿quién sería el villano?|Con cariño, pero con argumentos.',
-    '3v|Suelta una opinión polémica sobre esta boda|Los novios la aguantan. Tú atrévete.',
-    '3v|Cuenta algo que descubriste hoy y que probablemente no deberías saber|Lo que se dice aquí, aquí se queda.',
-    '2v|¿Quién es el más coqueto o la más coqueta de esta boda?|Da tu veredicto.',
-    '2v|¿Quién tiene una historia que NO puede contar delante de su familia?|Tú no la cuentes. Solo señala.',
-    '2v|¿Quién tendría más exes apareciendo en la playa?|Como en el reality.',
-    '3v|¿Quién juega de santo o de santa, pero tú sabes que tiene historial?|Sin pruebas, pero con certeza.',
-    '1v|¿Quién va a llorar más en la ceremonia?|Tu apuesta, antes de que pase.',
-    '2v|¿Qué pareja de invitados crees que es la próxima en casarse?|Predicción oficial.',
-    '1v|Tu predicción para los novios en diez años|Hijos, perros, países… lo que veas.',
-    '2v|El chisme más grande del viaje, sin nombres|Que los novios adivinen de quién es.',
-    '1v|¿Quién bailó peor esta noche?|Con amor y sin piedad.',
-    '2v|Confiesa tu mayor oso del viaje|Los novios juran no reírse. Mucho.',
-    '2v|¿Qué le dirías a tu ex si estuviera en esta boda?|Diez segundos. Sin groserías… o con pocas.'
+    '2v|¿Ya detectaste algún romance que nadie más haya notado?|Cuéntalo mirando a la cámara. Nombres opcionales.|durante',
+    '1v|¿Qué fue lo primero que pensaste cuando viste a los novios?|La primera impresión, sin filtro.|durante',
+    '1v|Resume todo lo que pasó esta noche en una frase|Una sola. Que valga.|durante',
+    '2v|¿Quién va a decir mañana "yo no me acuerdo de eso"?|Tu candidato y el porqué.|durante',
+    '2v|Si organizaras una cita entre dos invitados, ¿a quiénes juntarías?|Explica tu plan de cupido.|pre',
+    '2v|¿Quién está coqueteando y cree que nadie se ha dado cuenta?|Tú sí te diste cuenta.|durante',
+    '2v|Confiesa: ¿ya viste a alguien y pensaste "wow"?|No hace falta decir quién… pero ayuda.|pre',
+    '2v|¿Quién se está comportando como protagonista de reality?|Justifica tu respuesta.|pre',
+    '2v|Si esta boda fuera un reality, ¿quién sería el villano?|Con cariño, pero con argumentos.|durante',
+    '3v|Suelta una opinión polémica sobre esta boda|Los novios la aguantan. Tú atrévete.|after',
+    '3v|Cuenta algo que descubriste hoy y que probablemente no deberías saber|Lo que se dice aquí, aquí se queda.|durante',
+    '2v|¿Quién fue el más coqueto o la más coqueta de la boda?|Tu veredicto, ya con todo lo que viste.|after',
+    '2v|¿Quién tiene una historia que NO puede contar delante de su familia?|Tú no la cuentes. Solo señala.|pre',
+    '2v|¿Quién tendría más exes apareciendo en la playa?|Como en el reality.|pre',
+    '3v|¿Quién juega de santo o de santa, pero tú sabes que tiene historial?|Sin pruebas, pero con certeza.|durante',
+    '1v|¿Quién va a llorar más en la ceremonia?|Tu apuesta, antes de que pase.|pre',
+    '2v|¿Qué pareja de invitados crees que es la próxima en casarse?|Predicción oficial.|durante',
+    '1v|Tu predicción para los novios en diez años|Hijos, perros, países… lo que veas.|pre',
+    '2v|El chisme más grande del viaje, sin nombres|Que los novios adivinen de quién es.|after',
+    '1v|¿Quién bailó peor esta noche?|Con amor y sin piedad.|durante',
+    '2v|Confiesa tu mayor oso del viaje|Los novios juran no reírse. Mucho.|after',
+    '2v|¿Qué le dirías a tu ex si estuviera en esta boda?|Diez segundos. Sin groserías… o con pocas.|durante',
+    '2v|¿Qué va a pasar en esta boda que nadie se imagina?|Tu predicción más atrevida.|pre',
+    '1v|¿Quién va a ser el primero en la pista?|Y el último en irse.|pre',
+    '2v|¿Quién crees que va a ligar en este viaje?|Nombres opcionales, apuestas obligatorias.|pre',
+    '1v|Tu consejo para los novios antes del sí|Lo que nadie más les va a decir.|pre',
+    '2v|¿Qué fue lo más loco que pasó en el vuelo o en el tour?|Sin nombres, con detalles.|pre',
+    '2v|¿Qué pasó anoche que los novios no vieron?|Versión apta para su luna de miel.|after',
+    '1v|El mejor momento de la boda en una frase|Mirando a la cámara.|after',
+    '2v|¿Quién fue la sorpresa de la noche?|El que nadie esperaba que brillara.|after',
+    '2v|¿Qué romance de la boda va a continuar?|Tu apuesta oficial.|after',
+    '1v|¿A quién de la tribu vas a extrañar más?|Dilo mirando a la cámara.|after'
   ]},
   // Sorpréndeme: primero el mensaje de cada invitado para los novios; ya grabado, retos al azar
   {k:'mensaje', x:1, n:'Mensaje para los novios', s:'MENSAJE', h:'Un mensaje de cada invitado para Jenireé y Leandro.', r:[
@@ -1524,7 +1718,8 @@ CAPS.forEach(function(c, ci){
   c.count = c.r.length;
   c.r.forEach(function(s, i){
     var a = s.split('|'), m = a[0];
-    var r = {id:c.k + '-' + (i + 1), c:ci, r:+m.charAt(0) || 1, v:m.indexOf('v') > 0, p:!!c.p, t:a[1], d:a[2] || ''};
+    var r = {id:c.k + '-' + (i + 1), c:ci, r:+m.charAt(0) || 1, v:m.indexOf('v') > 0, p:!!c.p, t:a[1], d:a[2] || '', g:a[3] ? a[3].split(',') : null};
+    if (r.g) c.staged = true;
     RETOS.push(r); RETO[r.id] = r;
   });
 });
@@ -1555,7 +1750,7 @@ function chapterEventName(k){
   var i = -1; CAPS.forEach(function(c, j){ if (c.k === k) i = j; });
   if (i < 0) return '';
   var c = CAPS[i];
-  return gaName('cap_' + (c.x ? '00' : pad2(i + 1)) + '_' + slugify(c.n));
+  return gaName('cap_' + (c.x ? '00' : pad2(i + 1)) + '_' + slugify(c.n) + (c.staged && quest && quest.group ? '_' + quest.group : ''));
 }
 function ctxParams(){
   var r = quest && quest.last;
@@ -1587,8 +1782,8 @@ var BTN_NAMES = {
   heroCam:'volver_a_la_camara', heroPlay:'jugar_un_reto_inicio', heroUpload:'subir_de_mi_galeria', rtPlay:'jugar_un_reto_historia',
   nameEdit:'cambiar_nombre', nameSkip:'subir_sin_nombre', emptyCam:'abrir_camara_album_vacio', moreBtn:'ver_mas_fotos',
   trayRetry:'reintentar_subida', qrPrint:'imprimir_qr',
-  camPlay:'retos', camClose:'album', camFlip:'cambiar_camara', camRetake:'repetir', camSend:'enviar_al_album',
-  camNative:'tomar_foto_telefono', camNativeVid:'grabar_video_telefono', camMsgGallery:'subir_galeria',
+  camPlay:'retos', camClose:'ver_album', feedBack:'feed_volver_camara', feedHist:'feed_historia_y_retos', feedNew:'feed_nuevas', feedCam:'feed_tomar_foto', camFlip:'cambiar_camara', camRetake:'repetir', camSend:'enviar_al_album',
+  camNative:'tomar_foto_telefono', camNativeVid:'grabar_video_telefono', camMsgGallery:'subir_galeria', camGal:'galeria', guideOpen:'ver_guia', guideStart:'empezar_guia', guideSkip:'saltar_guia',
   qClose:'cerrar_retos', qAccept:'acepto_reto', qPrev:'regresar_reto', qGallery:'desde_mi_galeria',
   qAllBtn:'mi_pasaporte', qBack:'volver_del_pasaporte', qGroupBack:'cambiar_etapa',
   qGateOk:'acepto_entrar_privado', qGateOut:'salirme_privado', cqOpen:'ver_reto_activo', cqClear:'quitar_reto_activo',
@@ -1603,6 +1798,7 @@ function buttonName(el){
   if (el.dataset.who) return 'filtro_' + ({all:'todo', mine:'lo_mio', video:'videos'}[el.dataset.who] || el.dataset.who);
   if (el.classList.contains('photo')){ var p = state.photos.filter(function(x){ return x.id === el.dataset.id; })[0]; return p && p.v ? 'abrir_video' : 'abrir_foto'; }
   if (el.classList.contains('qitem')) return 'ver_sello_pasaporte';
+  if (el.classList.contains('post-like')) return 'like';
   // Capítulos y etapas ya tienen su propio evento con nombre (cap_, jugar_, ver_, etapa_)
   if (el.dataset.chap !== undefined || el.dataset.play || el.dataset.view || el.dataset.group) return '';
   return slugify(el.getAttribute('aria-label') || el.textContent).slice(0, 30);
@@ -1761,6 +1957,8 @@ function apiVideo(it, onProg){
 /* ---------- datos del álbum ---------- */
 function setPhotos(list){
   var ids = {};
+  // Los likes que aún no llegan al servidor se suman encima de lo que responde
+  list.forEach(function(p){ var n = LIKE.pending[p.id] || 0; if (n) p.l = (p.l || 0) + n; });
   list.forEach(function(p){ ids[p.id] = 1; });
   var keep = state.photos.filter(function(p){ return !ids[p.id] && state.previews[p.id] && Date.now() - p.t < 180000; });
   state.photos = keep.concat(list).sort(function(a, b){ return b.t - a.t; });
@@ -1800,18 +1998,40 @@ function levelOf(pts){
   var nx = LEVELS[i + 1];
   return {i:i, name:LEVELS[i][1], next:nx ? nx[0] : 0, nextName:nx ? nx[1] : '', pct:nx ? Math.round((pts - LEVELS[i][0]) / (nx[0] - LEVELS[i][0]) * 100) : 100};
 }
+// Retos ya mostrados: no se repiten hasta haber visto todos los de su capítulo
+var seen = (function(){ try { return JSON.parse(lsGet(LS.seen, '{}')) || {}; } catch(e){ return {}; } })();
+function markSeen(r){ if (r && !seen[r.id]){ seen[r.id] = 1; lsSet(LS.seen, JSON.stringify(seen)); } }
+// Cada reto pertenece a UNA sola etapa: la de su cuarto campo o, si no lo tiene, la primera etapa de su capítulo
+function stageOf(r){
+  if (r.g) return r.g[0];
+  var k = CAPS[r.c].k, g = GROUPS.filter(function(x){ return x.caps.indexOf(k) >= 0; })[0];
+  return g ? g.k : '';
+}
+function inStage(r){ return stageOf(r) === quest.group; }
+function chapRetos(k){ return RETOS.filter(function(r){ return CAPS[r.c].k === k && inStage(r); }); }
+function fresh(r){ return !quest.done[r.id] && !seen[r.id]; }
+function nextInChap(k, skip){
+  var list = chapRetos(k), r = list.filter(function(x){ return fresh(x) && x.id !== skip; })[0];
+  if (r) return r;
+  // Capítulo recorrido: vuelve a empezar solo con los que aún no tienen sello
+  var pend = list.filter(function(x){ return !quest.done[x.id] && x.id !== skip; });
+  if (pend.length){ pend.forEach(function(x){ delete seen[x.id]; }); lsSet(LS.seen, JSON.stringify(seen)); return null; }
+  return null;
+}
 function pickReto(skip){
-  // Sorpréndeme nunca sirve retos Atrevidos: esos solo salen si eliges su capítulo
-  if (quest.chap === 'mix' && !quest.done[MSG_ID]) return RETO[MSG_ID];
-  // Sorpréndeme mezcla los capítulos de la etapa elegida (Pre, Durante o After)
-  var gcaps = groupCaps();
-  function inChap(r){ return quest.chap === 'mix' ? !r.p && r.id !== MSG_ID && gcaps.indexOf(CAPS[r.c].k) >= 0 : CAPS[r.c].k === quest.chap; }
-  var pool = RETOS.filter(function(r){ return inChap(r) && !quest.done[r.id] && r.id !== skip; });
-  if (!pool.length) pool = RETOS.filter(function(r){ return inChap(r) && r.id !== skip; });
-  if (!pool.length) pool = RETOS.filter(function(r){ return !r.p && r.id !== skip; });
-  var W = {1:6, 2:3, 3:1}, x = Math.random() * pool.reduce(function(a, r){ return a + W[r.r]; }, 0);
-  for (var i = 0; i < pool.length; i++){ x -= W[pool[i].r]; if (x <= 0) return pool[i]; }
-  return pool[pool.length - 1];
+  if (quest.chap === 'mix'){
+    if (!quest.done[MSG_ID]) return RETO[MSG_ID];
+    // Sorpréndeme: al azar entre los retos públicos de esta etapa que todavía no has visto
+    var gcaps = groupCaps();
+    var base = RETOS.filter(function(r){ return !r.p && r.id !== MSG_ID && gcaps.indexOf(CAPS[r.c].k) >= 0 && inStage(r) && !quest.done[r.id] && r.id !== skip; });
+    var pool = base.filter(function(r){ return !seen[r.id]; });
+    if (!pool.length){ base.forEach(function(r){ delete seen[r.id]; }); lsSet(LS.seen, JSON.stringify(seen)); pool = base; }
+    if (!pool.length) pool = RETOS.filter(function(r){ return !r.p && inStage(r) && r.id !== skip; });
+    var W = {1:6, 2:3, 3:1}, x = Math.random() * pool.reduce(function(a, r){ return a + W[r.r]; }, 0);
+    for (var i = 0; i < pool.length; i++){ x -= W[pool[i].r]; if (x <= 0) return pool[i]; }
+    return pool[pool.length - 1];
+  }
+  return nextInChap(quest.chap, skip) || nextInChap(quest.chap, skip) || chapRetos(quest.chap)[0] || RETOS[0];
 }
 function retoStats(){
   var claimed = {}, players = {}, chap = {};
@@ -2033,6 +2253,51 @@ function askName(){
     $('#nameSkip').onclick = function(){ done(''); };
   });
 }
+// Mensajes del asistente, en orden (HTML propio, sin datos del usuario)
+var GUIDE_MSGS = [
+  '¡Hola! 👋 Soy el asistente de la boda de <strong>Jeni &amp; Leo</strong>. Bienvenido a la app de <strong>Fotos Compartidas y Retos</strong>.',
+  'Esto es un <strong>álbum de fotos compartido</strong> 📸. Puedes tomar fotos, grabar videos o subir contenido de tu <strong>Galería</strong>. Todo aparece al instante en el álbum y llega a los novios.',
+  'También hay <strong>Retos</strong> 🎯 para capturar momentos <strong>pre, durante y after boda</strong>. Toca <strong>Retos</strong> arriba a la derecha, elige tu etapa, desliza los capítulos y acepta con ✅.',
+  '<span class="sign-txt">Diviértanse, pásenlo bonito y capturen cada momento. ¡Muchas gracias por acompañarnos y buen viaje!</span><em>Con mucho amor, J&amp;L 💛</em>'
+];
+var guideRun = 0;
+function guideBubble(html, cls){
+  var d = document.createElement('div'); d.className = 'gd-b' + (cls ? ' ' + cls : ''); d.innerHTML = html;
+  var box = $('#guideMsgs'); box.appendChild(d); box.scrollTop = box.scrollHeight;
+  return d;
+}
+function guideFinish(){
+  guideRun++;
+  var box = $('#guideMsgs'), t = $('.gd-typing', box); if (t) t.remove();
+  var have = box.querySelectorAll('.gd-b:not(.gd-typing)').length;
+  GUIDE_MSGS.slice(have).forEach(function(m, i){ guideBubble(m, have + i === GUIDE_MSGS.length - 1 ? 'sign' : ''); });
+  $('#guideStatus').textContent = 'en línea'; $('#guideSkip').hidden = true;
+  $('#guideQuick').hidden = false; box.scrollTop = box.scrollHeight;
+  setTimeout(function(){ $('#guideStart').focus(); }, 60);
+}
+function showGuide(){
+  track('guide_open', {first_time:lsGet(LS.guide, '') === '1' ? 0 : 1});
+  $('#guide').hidden = false; document.body.classList.add('noscroll');
+  $('#guideMsgs').innerHTML = ''; $('#guideQuick').hidden = true; $('#guideSkip').hidden = false;
+  if (RM){ guideFinish(); return; }
+  var run = ++guideRun, i = 0;
+  (function next(){
+    if (run !== guideRun) return;
+    if (i >= GUIDE_MSGS.length){ guideFinish(); return; }
+    var typing = guideBubble('<i></i><i></i><i></i>', 'gd-typing');
+    $('#guideStatus').textContent = 'escribiendo…';
+    // Tiempo de "escritura" proporcional al largo del mensaje
+    // El doble de pausa que antes, para que se sienta como alguien escribiendo de verdad
+    var ms = Math.min(2800, 900 + GUIDE_MSGS[i].replace(/<[^>]+>/g, '').length * 12);
+    setTimeout(function(){
+      if (run !== guideRun) return;
+      typing.remove();
+      guideBubble(GUIDE_MSGS[i], i === GUIDE_MSGS.length - 1 ? 'sign' : '');
+      $('#guideStatus').textContent = 'en línea';
+      i++; setTimeout(next, 760);
+    }, ms);
+  })();
+}
 function ensureName(){ return state.name ? Promise.resolve() : askName(); }
 
 /* ---------- procesamiento de fotos y videos (la imagen nunca se altera) ---------- */
@@ -2191,8 +2456,9 @@ function toast(msg){
 
 /* ---------- dinámica de retos ---------- */
 // Tres grandes etapas. Un capítulo puede repetirse en varias (Romper hielo, Atrevidos, El confesionario).
+// Atrevidos y El confesionario tienen una versión distinta en cada etapa: sus retos llevan la etapa en el cuarto campo.
 var GROUPS = [
-  {k:'pre', n:'Pre', caps:['prep','aero','vuelo','llegada','plaka','comida','compras','tour','acropolis','atenas','yate','hielo']},
+  {k:'pre', n:'Pre', caps:['prep','aero','vuelo','llegada','plaka','comida','compras','tour','acropolis','atenas','yate','hielo','confesionario','atrevidos']},
   {k:'durante', n:'Durante', caps:['listos','ceremonia','novios','tribu','fiesta','pista','hielo','confesionario','atrevidos']},
   {k:'after', n:'After', caps:['adios','atrevidos','confesionario']}
 ];
@@ -2210,9 +2476,25 @@ function setGroup(k){
   if (quest.chap !== 'mix' && groupCaps().indexOf(quest.chap) < 0) quest.chap = groupCaps()[0];
   saveQuest(); renderChips();
 }
+// Barra superior: "Pre · Preparativos". Al cambiar de capítulo se anima y aparece "Nuevo capítulo"
+var lastStageLabel = '';
+function flashStage(announce){
+  var g = groupByKey(quest.group), c = CAPS.filter(function(x){ return x.k === quest.chap; })[0];
+  var label = g.n + ' · ' + (quest.chap === 'mix' ? 'Sorpréndeme' : (c ? c.n : ''));
+  if (label === lastStageLabel) return;
+  var el = $('#qStageName');
+  el.textContent = label;
+  if (announce && lastStageLabel && !RM){
+    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+    var f = $('#qFlash'); f.textContent = quest.chap === 'mix' ? 'Sorpréndeme' : 'Nuevo capítulo';
+    f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+    if (navigator.vibrate) navigator.vibrate(15);
+  }
+  lastStageLabel = label;
+}
 function renderChips(){
   var g = groupByKey(quest.group);
-  $('#qStageName').textContent = g.n;
+  lastStageLabel = ''; flashStage(false);
   $('#qChaps').innerHTML = g.caps.map(function(k){
     var c = CAPS.filter(function(x){ return x.k === k; })[0];
     return '<button type="button" data-chap="' + k + '"' + (c.p ? ' class="priv"' : '') + '>' + esc(c.n) + '</button>';
@@ -2235,10 +2517,31 @@ function openQuest(id){
 var prevChap = 'prep';
 // Historial de retos vistos en la tarjeta: ⬅️ regresa al anterior; sin historial, vuelve a las etapas
 var retoHist = [];
-function goNext(){ retoHist.push(quest.last.id); quest.last = pickReto(quest.last.id); presentCard(true); }
+function goNext(){
+  var cur = quest.last; retoHist.push(cur.id);
+  if (quest.chap === 'mix' || isPrivChap(quest.chap)){ quest.last = pickReto(cur.id); presentCard(true); return; }
+  var r = chapRetos(quest.chap).filter(function(x){ return fresh(x) && x.id !== cur.id; })[0];
+  if (!r){
+    // Siguiente capítulo público de la etapa que tenga retos nuevos (los privados solo se eligen a mano)
+    var caps = groupCaps().filter(function(k){ return !isPrivChap(k); }), i = caps.indexOf(quest.chap);
+    for (var n = 1; n <= caps.length && !r; n++){
+      var k = caps[(i + n) % caps.length];
+      var cand = chapRetos(k).filter(fresh)[0];
+      if (cand){ if (!isPrivChap(quest.chap)) prevChap = quest.chap; quest.chap = k; saveQuest(); r = cand; track('chapter_auto_next', Object.assign({group:quest.group}, chapParams(k))); }
+    }
+    if (!r) r = pickReto(cur.id);
+    paintChapChips(true); flashStage(true);
+  }
+  quest.last = r; presentCard(true);
+}
 function goBack(){
   var id = retoHist.pop();
-  if (id && RETO[id]){ quest.last = RETO[id]; presentCard(true); return; }
+  if (id && RETO[id]){
+    quest.last = RETO[id];
+    var k = CAPS[RETO[id].c].k;
+    if (k !== quest.chap && !CAPS[RETO[id].c].x){ quest.chap = k; saveQuest(); paintChapChips(true); flashStage(true); }
+    presentCard(true); return;
+  }
   showQuestView('groups'); paintQuestProgress();
 }
 // Aceptación del aviso por capítulo privado (Atrevidos, El confesionario)
@@ -2259,7 +2562,8 @@ function showQuestView(v){
 // La primera vez que alguien entra a un capítulo privado ve el aviso y decide: Acepto o Salirme
 function presentCard(pop){
   if (quest.last && quest.last.p && !atrevOk(CAPS[quest.last.c].k)){ paintGate(quest.last); showQuestView('gate'); track('private_gate_view', chapParams(CAPS[quest.last.c].k)); setTimeout(function(){ $('#qGateOk').focus(); }, 60); return; }
-  showQuestView('card'); paintQuestCard(pop); paintQuestProgress();
+  showQuestView('card'); paintQuestCard(pop); paintQuestProgress(); flashStage(false);
+  markSeen(quest.last);
   track('reto_view', retoParams(quest.last));
   setTimeout(function(){ $('#qAccept').focus(); }, 60);
 }
@@ -2293,17 +2597,36 @@ function paintQuestProgress(){
     $('#qpCh').textContent = c.n + ': el grupo lleva ' + plural(st.chap[c.k].n, 'escena', 'escenas') + ' y tú ' + plural(mine, 'sello', 'sellos');
   }
 }
-function paintChapChips(){
+// El capítulo elegido queda centrado; al deslizar, el que llega al centro se elige solo
+var chipLockUntil = 0, chipScrollT = null;
+function paintChapChips(smooth){
   var sel = null;
   $$('#qChaps button').forEach(function(b){ var on = b.dataset.chap === quest.chap; b.setAttribute('aria-pressed', on); if (on) sel = b; });
-  if (sel){ var box = $('#qChaps'); box.scrollLeft = Math.max(0, sel.offsetLeft - box.offsetLeft - 16); }
+  if (sel){
+    var box = $('#qChaps'), left = sel.offsetLeft - (box.clientWidth - sel.offsetWidth) / 2;
+    chipLockUntil = Date.now() + (smooth ? 700 : 120);
+    try { box.scrollTo({left:Math.max(0, left), behavior:smooth && !RM ? 'smooth' : 'auto'}); } catch(e){ box.scrollLeft = Math.max(0, left); }
+  }
+}
+function chipAtCenter(){
+  var box = $('#qChaps'), mid = box.scrollLeft + box.clientWidth / 2, best = null, bd = 1e9;
+  $$('#qChaps button').forEach(function(b){ var d = Math.abs(b.offsetLeft + b.offsetWidth / 2 - mid); if (d < bd){ bd = d; best = b; } });
+  return best;
+}
+function selectChap(k, source){
+  if (!k || k === quest.chap) return;
+  if (!isPrivChap(quest.chap)) prevChap = quest.chap;
+  track('chapter_select', Object.assign({source:source, group:quest.group}, chapParams(k)));
+  if (quest.last) retoHist.push(quest.last.id);
+  quest.chap = k; saveQuest(); paintChapChips(source !== 'retos_deslizar'); flashStage(true);
+  quest.last = pickReto(); presentCard(true);
 }
 function paintQuestCard(pop){
   var r = quest.last, c = $('#qCard'), done = !!quest.done[r.id];
   c.className = 'qcard r' + r.r + (r.p ? ' priv' : '');
   $('#qPrivTag').hidden = !r.p;
   $('#qRarity').textContent = RAREZA[r.r];
-  $('#qCat').textContent = r.id === MSG_ID ? 'Sorpréndeme' : CAPS[r.c].n;
+  $('#qCat').textContent = r.id === MSG_ID ? 'Sorpréndeme' : CAPS[r.c].n + (CAPS[r.c].staged ? ' · ' + groupByKey(quest.group).n : '');
   // Mientras no lo grabe, Sorpréndeme se queda en el mensaje para los novios
   var msgFirst = quest.chap === 'mix' && r.id === MSG_ID && !done;
   $('#qShuffle').hidden = msgFirst;
@@ -2380,16 +2703,29 @@ function initQuest(){
   $('#qGroupBack').addEventListener('click', function(){ track('group_back', {group:quest.group}); showQuestView('groups'); paintQuestProgress(); });
   $('#qChaps').addEventListener('click', function(e){
     var b = e.target.closest('button'); if (!b) return;
-    if (!isPrivChap(quest.chap)) prevChap = quest.chap;
-    track('chapter_select', Object.assign({source:'retos_chips', group:quest.group}, chapParams(b.dataset.chap)));
-    if (quest.last) retoHist.push(quest.last.id);
-    quest.chap = b.dataset.chap; saveQuest(); paintChapChips();
-    quest.last = pickReto(); presentCard(true);
+    selectChap(b.dataset.chap, 'retos_chips');
   });
+  // Deslizar los capítulos: al detenerse, el que queda al centro se elige y muestra su reto
+  $('#qChaps').addEventListener('scroll', function(){
+    clearTimeout(chipScrollT);
+    chipScrollT = setTimeout(function(){
+      if (Date.now() < chipLockUntil || $('#qChapsWrap').hidden) return;
+      var b = chipAtCenter(); if (b) selectChap(b.dataset.chap, 'retos_deslizar');
+    }, 180);
+  }, {passive:true});
   $('#camPlay').addEventListener('click', function(){ openQuest(); });
   $('#qClose').addEventListener('click', closeQuest);
   $('#qAccept').addEventListener('click', function(){ acceptReto(quest.last.id); closeQuest(); });
   $('#qShuffle').addEventListener('click', goNext);
+  var cx0 = null, cy0 = 0;
+  $('#qCard').addEventListener('pointerdown', function(e){ cx0 = e.clientX; cy0 = e.clientY; });
+  $('#qCard').addEventListener('pointerup', function(e){
+    if (cx0 == null) return;
+    var dx = e.clientX - cx0, dy = e.clientY - cy0; cx0 = null;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0){ if (!$('#qShuffle').hidden){ track('reto_swipe', {dir:'next'}); goNext(); } }
+    else { track('reto_swipe', {dir:'back'}); goBack(); }
+  });
   $('#qPrev').addEventListener('click', goBack);
   $('#qGallery').addEventListener('click', function(){ acceptReto(quest.last.id); closeQuest(); pickGallery(); });
   $('#qAllBtn').addEventListener('click', function(){ paintQuestList(); showQuestView('list'); $('#qBack').focus(); });
@@ -2432,7 +2768,7 @@ function openCamera(){
 function closeCamera(){
   if (cam.rec) stopRec(true);
   stopStream(); cam.busy = false;
-  $('#quest').hidden = true;
+  $('#quest').hidden = true; $('#feed').hidden = true;
   $('#cam').hidden = true; document.body.classList.remove('noscroll', 'cam-open', 'recording');
   $('#historia').scrollIntoView({block:'start'});
   $('#histTitle').setAttribute('tabindex', '-1'); $('#histTitle').focus({preventScroll:true});
@@ -2482,9 +2818,9 @@ function setMode(m){
   if (!$('#cam').hidden && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.isSecureContext) startStream();
 }
 function paintCamAlbum(){
-  var p = state.photos[0], t = $('#camThumb');
-  if (p && t.dataset.id !== p.id){ t.dataset.id = p.id; t.innerHTML = '<img alt="">'; setImg($('img', t), p, 200); }
-  $('#camAlbumLbl').textContent = state.photos.length ? plural(state.photos.length, 'escena', 'escenas') : 'Álbum';
+  var n = state.photos.length, b = $('#camAlbumN');
+  b.hidden = !n; b.textContent = n > 999 ? '999+' : n;
+  if (!$('#feed').hidden) paintFeed();
 }
 function shoot(){
   if (cam.mode === 'video' && cam.rec){ stopRec(); return; }
@@ -2592,7 +2928,7 @@ function sendShot(){
 }
 function pickGallery(){ ensureName().then(function(){ $('#fileGallery').click(); }); }
 function initCamera(){
-  $('#camClose').addEventListener('click', closeCamera);
+  $('#camClose').addEventListener('click', openFeed);
   $('#shutter').addEventListener('click', shoot);
   $$('.cam-mode').forEach(function(b){ b.addEventListener('click', function(){ if (b.dataset.mode !== cam.mode) track('camera_mode', {mode:b.dataset.mode}); setMode(b.dataset.mode); }); });
   $('#camFlip').addEventListener('click', function(){ if (cam.rec) return; cam.facing = cam.facing === 'user' ? 'environment' : 'user'; startStream(); });
@@ -2601,6 +2937,7 @@ function initCamera(){
   $('#camName').addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); $('#camCaption').focus(); } });
   $('#camCaption').addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); sendShot(); } });
   $('#camMsgGallery').addEventListener('click', pickGallery);
+  $('#camGal').addEventListener('click', pickGallery);
   $('#camNative').addEventListener('click', function(){ $('#fileCapture').click(); });
   $('#camNativeVid').addEventListener('click', function(){ $('#fileVideoCapture').click(); });
   $('#fileCapture').addEventListener('change', function(){ processFiles(this.files, 'camara'); this.value = ''; });
@@ -2608,6 +2945,7 @@ function initCamera(){
   $('#fileGallery').addEventListener('change', function(){ processFiles(this.files, 'galeria'); this.value = ''; });
   document.addEventListener('keydown', function(e){
     if ($('#cam').hidden || !$('#nameModal').hidden) return;
+    if (!$('#feed').hidden){ if (e.key === 'Escape' && $('#lb').hidden) closeFeed(); return; }
     if (!$('#quest').hidden){ if (e.key === 'Escape') closeQuest(); return; }
     if (e.key === 'Escape'){ if (cam.rec) stopRec(); else if (!$('#camReview').hidden) discardReview(); else closeCamera(); }
     if ((e.key === ' ' || e.key === 'Enter') && $('#camReview').hidden && document.activeElement === document.body){ e.preventDefault(); shoot(); }
@@ -2615,16 +2953,271 @@ function initCamera(){
   document.addEventListener('visibilitychange', function(){
     if ($('#cam').hidden) return;
     if (document.hidden){ if (cam.rec) stopRec(); if ($('#camReview').hidden) stopStream(); }
-    else if (!cam.stream && $('#camReview').hidden) startStream();
+    else if (!cam.stream && $('#camReview').hidden && $('#feed').hidden) startStream();
   });
+}
+
+/* ---------- feed del álbum (estilo Instagram) ---------- */
+var HEART_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2 0 3.6 1.1 5 3 1.4-1.9 3-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>';
+var feed = {shown:12, ids:[], nodes:{}, io:null, vio:null, tapT:null, lastTap:{id:'', t:0}, retoSlots:{}};
+// Likes anónimos: cada toque suma uno. Los toques seguidos se agrupan y se envían juntos
+var LIKE = {pending:{}, timer:null};
+var tapped = (function(){ try { return JSON.parse(lsGet(LS.likes, '{}')) || {}; } catch(e){ return {}; } })();
+function initials(n){ var p = String(n || '?').trim().split(/\s+/); return ((p[0] || '?').charAt(0) + (p[1] ? p[1].charAt(0) : '')).toUpperCase(); }
+function ago(t){
+  var m = Math.round((Date.now() - t) / 60000);
+  if (m < 1) return 'ahora';
+  if (m < 60) return 'hace ' + m + ' min';
+  var h = Math.round(m / 60); if (h < 24) return 'hace ' + h + ' h';
+  return longDate(t);
+}
+function findPost(id){ return state.photos.filter(function(x){ return x.id === id; })[0]; }
+function byLikes(a, b){ return (b.l || 0) - (a.l || 0) || b.t - a.t; }
+function favorites(){ return state.photos.filter(function(p){ return (p.l || 0) > 0; }).sort(byLikes); }
+function topRanks(){ var m = {}; favorites().slice(0, 3).forEach(function(p, i){ m[p.id] = i + 1; }); return m; }
+
+function openFeed(){
+  track('feed_open', {items:state.photos.length});
+  if (cam.rec) stopRec(true);
+  stopStream();
+  $('#feed').hidden = false; $('#feedNew').hidden = true;
+  feed.shown = 12; feed.ids = []; $('#feedList').scrollTop = 0; $('#feedProg').style.width = '0';
+  paintFeed(true);
+  setTimeout(function(){ $('#feedBack').focus(); }, 60);
+}
+function closeFeed(){
+  flushLikes();
+  $$('#feedIn iframe, #feedIn video').forEach(function(m){ var pm = m.parentNode; m.remove(); var pl = $('.post-play', pm); if (pl) pl.hidden = false; });
+  $('#feed').hidden = true;
+  if (!$('#cam').hidden && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.isSecureContext) startStream();
+  $('#camClose').focus();
+}
+function postNode(p){
+  var key = p.id + '|' + (p.pv || '');
+  if (feed.nodes[key]) return feed.nodes[key];
+  var r = p.ch && RETO[p.ch];
+  var ratio = p.w && p.h ? Math.max(.8, Math.min(1.91, p.w / p.h)) : .8;
+  var a = document.createElement('article'); a.className = 'post'; a.dataset.id = p.id;
+  a.innerHTML = '<header class="post-h"><span class="post-av" aria-hidden="true"></span><div><b></b><small></small></div></header>' +
+    '<div class="post-m" style="aspect-ratio:' + ratio.toFixed(3) + '"><img alt="" loading="lazy" decoding="async"><span class="post-top" hidden></span>' +
+    (p.v ? '<span class="post-dur">▶ ' + (p.d ? fmtDur(p.d) : 'Video') + '</span><button type="button" class="post-play" aria-label="Reproducir video">▶</button>' : '') +
+    (r ? '<span class="seal" aria-hidden="true">' + sealInner(r, p.t) + '</span>' : '') + '</div>' +
+    '<div class="post-act"><button type="button" class="post-like" data-like="' + esc(p.id) + '" aria-pressed="false" aria-label="Me gusta">' + HEART_SVG + '</button>' +
+    '<span class="post-lc"></span><span class="post-tip">Toca dos veces la foto ♥</span></div>' +
+    '<div class="post-b">' + (r ? '<p class="post-ch"></p>' : '') + (p.c ? '<p class="post-cap"><b></b><span></span></p>' : '') + '<time class="post-t"></time></div>';
+  $('.post-av', a).textContent = initials(p.n);
+  $('.post-h b', a).textContent = p.n;
+  $('.post-h small', a).textContent = r ? CAPS[r.c].n : (p.v ? 'Video' : 'Foto');
+  if (r) $('.post-ch', a).textContent = '🎯 ' + r.t;
+  if (p.c){ $('.post-cap b', a).textContent = p.n.split(' ')[0]; $('.post-cap span', a).textContent = p.c; }
+  $('.post-t', a).textContent = ago(p.t);
+  var img = $('img', a); img.alt = (p.v ? 'Video' : 'Foto') + ' de ' + p.n; setImg(img, p, 1080);
+  feed.nodes[key] = a;
+  return a;
+}
+function paintLikeUI(a, p, ranks, bump){
+  if (!a || !p) return;
+  var n = p.l || 0, lc = $('.post-lc', a), btn = $('.post-like', a), top = $('.post-top', a), rk = ranks && ranks[p.id];
+  lc.textContent = n ? plural(n, 'like', 'likes') : 'Sé el primero';
+  btn.setAttribute('aria-pressed', !!tapped[p.id]);
+  btn.setAttribute('aria-label', 'Me gusta' + (n ? ', ' + plural(n, 'like', 'likes') : ''));
+  if (ranks){ top.hidden = !rk; top.textContent = rk ? '🔥 Top ' + rk : ''; a.classList.toggle('has-top', !!rk); }
+  if (bump && !RM){ lc.classList.remove('bump'); void lc.offsetWidth; lc.classList.add('bump'); btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop'); }
+}
+function updateFeedMeta(){
+  var ranks = topRanks(), total = state.photos.reduce(function(a, p){ return a + (p.l || 0); }, 0);
+  $$('#feedIn .post').forEach(function(a){ var p = findPost(a.dataset.id); paintLikeUI(a, p, ranks); var t = $('.post-t', a); if (p && t) t.textContent = ago(p.t); });
+  $('#feedCount').textContent = state.photos.length ? plural(state.photos.length, 'publicación', 'publicaciones') + (total ? ' · ' + total + ' ♥' : '') : 'Boda Jeni & Leo';
+}
+// Reto sugerido para una tarjeta intercalada (siempre el mismo para ese lugar mientras no se cumpla)
+function feedReto(slot, skip){
+  var cur = feed.retoSlots[slot];
+  if (!skip && cur && RETO[cur] && !quest.done[cur]) return RETO[cur];
+  var pool = RETOS.filter(function(r){ return !r.p && r.id !== MSG_ID && stageOf(r) === quest.group && !quest.done[r.id] && r.id !== skip; });
+  if (!pool.length) pool = RETOS.filter(function(r){ return !r.p && r.id !== MSG_ID && !quest.done[r.id]; });
+  var r = pool[Math.floor(Math.random() * pool.length)] || RETOS[0];
+  feed.retoSlots[slot] = r.id; return r;
+}
+function retoCardHTML(r){
+  return '<p class="fi-k">🎯 Reto para ti · ' + esc(CAPS[r.c].n) + '</p><h3>' + esc(r.t) + '</h3><p>' + esc(r.d) + ' · +' + PTS[r.r] + ' pts' + (r.v ? ' · en video' : '') + '</p>' +
+    '<div class="fi-row"><button type="button" class="btn btn-oro" data-act="reto-ok" data-ga="feed_reto_acepto">✅ Acepto</button><button type="button" class="btn btn-line" data-act="reto-otro" data-ga="feed_reto_otro">➡️ Otro</button></div>';
+}
+function slotCard(slot){
+  var c = document.createElement('section'); c.className = 'fi'; c.dataset.slot = slot;
+  var favs = favorites();
+  if (slot % 2 === 1 && favs.length){
+    c.innerHTML = '<p class="fi-k">🔥 Las más queridas del álbum</p><h3>Lo que más está enamorando a la tribu</h3><div class="fi-top"></div>';
+    var row = $('.fi-top', c);
+    favs.slice(0, 8).forEach(function(p, i){
+      var b = document.createElement('button'); b.type = 'button'; b.dataset.act = 'fav'; b.dataset.id = p.id; b.dataset.ga = 'feed_top_abrir';
+      b.setAttribute('aria-label', 'Favorita ' + (i + 1) + ', ' + plural(p.l, 'like', 'likes'));
+      b.innerHTML = '<img alt=""><em>' + (i + 1) + '</em><span>' + HEART_SVG + p.l + '</span>';
+      setImg($('img', b), p, 300); row.appendChild(b);
+    });
+  } else {
+    var r = feedReto(slot); c.dataset.reto = r.id; c.innerHTML = retoCardHTML(r);
+  }
+  return c;
+}
+function paintFeed(force){
+  var list = state.photos, box = $('#feedIn');
+  if (!list.length){
+    box.innerHTML = '<div class="feed-empty"><p>Todavía no hay fotos. ¡La primera puede ser tuya!</p><button type="button" class="btn btn-oro" data-act="cam" data-ga="feed_vacio_tomar_foto">📸 Tomar foto</button></div>';
+    feed.ids = []; $('#feedMore').hidden = true; updateFeedMeta(); return;
+  }
+  var vis = list.slice(0, feed.shown), ids = vis.map(function(p){ return p.id + (p.pv || ''); });
+  var added = feed.ids.length ? ids.filter(function(id){ return feed.ids.indexOf(id) < 0; }).length : 0;
+  if (!force && added && $('#feedList').scrollTop > 200 && feed.ids[0] !== ids[0]){
+    var nb = $('#feedNew'); nb.textContent = '↑ ' + plural(added, 'publicación nueva', 'publicaciones nuevas'); nb.hidden = false; updateFeedMeta(); return;
+  }
+  if (!force && ids.join() === feed.ids.join()){ updateFeedMeta(); return; }
+  feed.ids = ids;
+  var frag = document.createDocumentFragment();
+  vis.forEach(function(p, i){
+    frag.appendChild(postNode(p));
+    // Cada 5 publicaciones, una tarjeta distinta: un reto para ti o las más queridas
+    if ((i + 1) % 5 === 0 && i < vis.length - 1) frag.appendChild(slotCard((i + 1) / 5));
+  });
+  var more = list.length > feed.shown;
+  if (!more){
+    var end = document.createElement('section'); end.className = 'fi fi-end';
+    end.innerHTML = '<p class="fi-k">🎉 Estás al día</p><h3>Ya viste todo lo que ha compartido la tribu</h3><p>¿Capturas el siguiente momento de la historia?</p><button type="button" class="btn btn-oro" data-act="cam" data-ga="feed_fin_tomar_foto">📸 Tomar foto</button>';
+    frag.appendChild(end);
+  }
+  box.innerHTML = ''; box.appendChild(frag);
+  $('#feedMore').hidden = !more;
+  updateFeedMeta(); watchFeedEnd(); watchPosts();
+}
+function watchFeedEnd(){
+  if (!('IntersectionObserver' in window)) return;
+  if (!feed.io){
+    feed.io = new IntersectionObserver(function(en){
+      if (en[0].isIntersecting && !$('#feed').hidden && state.photos.length > feed.shown){
+        feed.shown += 12; track('feed_load_more', {shown:feed.shown}); paintFeed(true);
+      }
+    }, {root:$('#feedList'), rootMargin:'800px 0px'});
+  }
+  feed.io.disconnect(); feed.io.observe($('#feedMore'));
+}
+// Cada publicación entra con una animación suave cuando aparece en pantalla
+function watchPosts(){
+  var posts = $$('#feedIn .post');
+  if (!('IntersectionObserver' in window) || RM){ posts.forEach(function(a){ a.classList.add('in'); }); return; }
+  if (!feed.vio){
+    feed.vio = new IntersectionObserver(function(en){
+      en.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); feed.vio.unobserve(e.target); } });
+    }, {root:$('#feedList'), threshold:.12});
+  }
+  posts.forEach(function(a){ if (!a.classList.contains('in')) feed.vio.observe(a); });
+}
+function playPost(a){
+  var p = findPost(a.dataset.id); if (!p) return;
+  var m = $('.post-m', a), btn = $('.post-play', m);
+  if ($('iframe, video', m)) return;
+  track('feed_video_play', {local:state.local[p.id] ? 1 : 0});
+  if (state.local[p.id]){
+    var v = document.createElement('video'); v.controls = true; v.playsInline = true; v.autoplay = true; v.src = state.local[p.id]; m.appendChild(v);
+  } else if (p.id.indexOf('demo_') !== 0){
+    var f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen'; f.setAttribute('allowfullscreen', ''); f.title = 'Video de ' + p.n;
+    f.src = 'https://drive.google.com/file/d/' + encodeURIComponent(p.id) + '/preview'; m.appendChild(f);
+  } else return;
+  if (btn) btn.hidden = true;
+}
+// Corazones que flotan desde donde tocaste
+function floatHearts(x, y, count){
+  if (RM) return;
+  for (var i = 0; i < count; i++){
+    var h = document.createElement('span'); h.className = 'fh'; h.innerHTML = HEART_SVG;
+    h.style.left = (x + (Math.random() * 24 - 12)) + 'px'; h.style.top = y + 'px';
+    h.style.setProperty('--dx', (Math.random() * 80 - 40) + 'px'); h.style.setProperty('--rot', (Math.random() * 50 - 25) + 'deg');
+    h.style.animationDelay = (i * 70) + 'ms';
+    document.body.appendChild(h);
+    setTimeout(function(el){ return function(){ el.remove(); }; }(h), 1300 + i * 70);
+  }
+}
+function likeTap(id, x, y, big){
+  var p = findPost(id); if (!p || isPrivCh(p.ch)) return;
+  p.l = (p.l || 0) + 1;
+  tapped[id] = (tapped[id] || 0) + 1; lsSet(LS.likes, JSON.stringify(tapped));
+  LIKE.pending[id] = (LIKE.pending[id] || 0) + 1;
+  clearTimeout(LIKE.timer); LIKE.timer = setTimeout(flushLikes, 1200);
+  var a = $('#feedIn .post[data-id="' + id + '"]');
+  if (a && big && !RM){ var bh = document.createElement('span'); bh.className = 'big-heart'; bh.innerHTML = HEART_SVG; $('.post-m', a).appendChild(bh); setTimeout(function(){ bh.remove(); }, 950); }
+  floatHearts(x, y, big ? 5 : 2);
+  if (navigator.vibrate) navigator.vibrate(big ? 18 : 8);
+  paintLikeUI(a, p, null, true);
+  var cnt = $('#feedCount'); if (cnt) updateFeedMeta();
+}
+function apiLike(id, n){
+  if (!CONFIG.SCRIPT_URL){ var p = findPost(id); return Promise.resolve({ok:true, likes:(p ? p.l : 0) - (LIKE.pending[id] || 0)}); }
+  return jsonp({action:'like', k:KEY, id:id, n:n}, 15000);
+}
+function flushLikes(){
+  clearTimeout(LIKE.timer);
+  Object.keys(LIKE.pending).forEach(function(id){
+    var n = Math.min(50, LIKE.pending[id]); if (!n) return;
+    LIKE.pending[id] -= n; if (LIKE.pending[id] <= 0) delete LIKE.pending[id];
+    track('photo_like', {taps:n});
+    apiLike(id, n).then(function(r){
+      var p = findPost(id);
+      if (r && r.ok && typeof r.likes === 'number' && p){ p.l = r.likes + (LIKE.pending[id] || 0); updateFeedMeta(); }
+    }).catch(function(){ LIKE.pending[id] = (LIKE.pending[id] || 0) + n; clearTimeout(LIKE.timer); LIKE.timer = setTimeout(flushLikes, 5000); });
+  });
+}
+// Al salir de la página, los likes pendientes se envían en segundo plano
+function beaconLikes(){
+  if (!CONFIG.SCRIPT_URL || !navigator.sendBeacon) return;
+  Object.keys(LIKE.pending).forEach(function(id){
+    var n = Math.min(50, LIKE.pending[id]); if (!n) return;
+    try { navigator.sendBeacon(CONFIG.SCRIPT_URL, new Blob([JSON.stringify({k:KEY, action:'like', id:id, n:n})], {type:'text/plain'})); delete LIKE.pending[id]; } catch(e){}
+  });
+}
+function initFeed(){
+  $('#feedBack').addEventListener('click', closeFeed);
+  $('#feedCam').addEventListener('click', closeFeed);
+  $('#feedHist').addEventListener('click', function(){ flushLikes(); $('#feed').hidden = true; closeCamera(); });
+  $('#feedNew').addEventListener('click', function(){ $('#feedNew').hidden = true; $('#feedList').scrollTop = 0; paintFeed(true); });
+  $('#feedList').addEventListener('scroll', function(){
+    var el = this, max = el.scrollHeight - el.clientHeight;
+    $('#feedProg').style.width = (max > 0 ? Math.min(100, el.scrollTop / max * 100) : 0) + '%';
+  }, {passive:true});
+  $('#feedIn').addEventListener('click', function(e){
+    var lk = e.target.closest('.post-like'); if (lk){ likeTap(lk.dataset.like, e.clientX, e.clientY, false); return; }
+    var pl = e.target.closest('.post-play'); if (pl){ playPost(pl.closest('.post')); return; }
+    var act = e.target.closest('[data-act]');
+    if (act){
+      var k = act.dataset.act, card = act.closest('.fi');
+      if (k === 'cam') closeFeed();
+      if (k === 'fav') openLightbox(act.dataset.id, favorites());
+      if (k === 'reto-ok'){ var r = RETO[card.dataset.reto]; if (r){ flushLikes(); acceptReto(r.id); closeFeed(); toast('Reto activo: ' + r.t); } }
+      if (k === 'reto-otro'){ var slot = card.dataset.slot, nr = feedReto(slot, card.dataset.reto); card.dataset.reto = nr.id; card.innerHTML = retoCardHTML(nr); }
+      return;
+    }
+    var m = e.target.closest('.post-m'); if (!m || $('iframe, video', m)) return;
+    var a = m.closest('.post'), id = a.dataset.id, now = Date.now();
+    // Doble toque = like con corazón grande; un toque = abrir la foto o reproducir el video
+    if (feed.lastTap.id === id && now - feed.lastTap.t < 320){
+      clearTimeout(feed.tapT); feed.lastTap = {id:'', t:0};
+      track('feed_double_tap');
+      likeTap(id, e.clientX, e.clientY, true); return;
+    }
+    feed.lastTap = {id:id, t:now};
+    clearTimeout(feed.tapT);
+    feed.tapT = setTimeout(function(){
+      var p = findPost(id); if (!p) return;
+      if (p.v) playPost(a); else openLightbox(id, state.photos);
+    }, 320);
+  });
+  window.addEventListener('pagehide', beaconLikes);
+  document.addEventListener('visibilitychange', function(){ if (document.hidden){ flushLikes(); } });
 }
 
 /* ---------- visor ---------- */
 var lb = {list:[], i:0, last:null};
-function openLightbox(id){
+function openLightbox(id, list){
   var tp = state.photos.filter(function(x){ return x.id === id; })[0];
   if (tp) track('lightbox_open', Object.assign({kind:tp.v ? 'video' : 'foto', filter:state.who, is_mine:isMine(id) ? 1 : 0}, retoParams(RETO[tp.ch])));
-  lb.list = filtered().slice(); lb.i = Math.max(0, lb.list.map(function(p){ return p.id; }).indexOf(id));
+  lb.list = (list || filtered()).slice(); lb.i = Math.max(0, lb.list.map(function(p){ return p.id; }).indexOf(id));
   lb.last = document.activeElement;
   $('#lb').hidden = false; document.body.classList.add('noscroll');
   paintLightbox(); $('#lbClose').focus();
@@ -2793,7 +3386,7 @@ function init(){
   }
 
   initClickTracking();
-  tilt(); initFilters(); initCamera(); initQuest(); initLightbox();
+  tilt(); initFilters(); initCamera(); initQuest(); initLightbox(); initFeed();
   $('#heroCam').addEventListener('click', openCamera);
   $('#emptyCam').addEventListener('click', openCamera);
   $('#heroUpload').addEventListener('click', pickGallery);
@@ -2803,7 +3396,23 @@ function init(){
 
   paintAll(); loadList();
   // La experiencia arranca en la cámara. Con #album o #historia en la URL se abre directo la página.
-  if (location.hash !== '#album' && location.hash !== '#historia') openCamera();
+  // La primera vez se muestra antes la guía rápida; la cámara se abre al tocar Empezar.
+  var startCam = location.hash !== '#album' && location.hash !== '#historia';
+  $('#guideSkip').addEventListener('click', function(){ track('guide_skip'); guideFinish(); });
+  $('#guideStart').addEventListener('click', function(){
+    // Respuesta rápida: aparece como mensaje del invitado y luego se abre la cámara
+    lsSet(LS.guide, '1'); $('#guideQuick').hidden = true;
+    guideBubble('¡Empezar! 🚀', 'me');
+    setTimeout(function(){
+      $('#guide').hidden = true;
+      if (!$('#cam').hidden || !startCam) document.body.classList.toggle('noscroll', !$('#cam').hidden);
+      if (startCam && $('#cam').hidden) openCamera();
+      startCam = false;
+    }, RM ? 0 : 550);
+  });
+  $('#guideOpen').addEventListener('click', function(){ showGuide(); });
+  if (lsGet(LS.guide, '') !== '1') showGuide();
+  else if (startCam){ startCam = false; openCamera(); }
   setInterval(function(){ if (!document.hidden) loadList(); }, CONFIG.REFRESH_MS);
   document.addEventListener('visibilitychange', function(){ if (!document.hidden) loadList(); });
 
@@ -2818,3 +3427,4 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 </script>
 </body>
 </html>
+

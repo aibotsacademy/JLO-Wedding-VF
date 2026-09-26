@@ -247,14 +247,14 @@ body.recording .cam-frame i{border-color:var(--rec)}
 .cam-icon.lg svg{width:26px;height:26px}
 .cam-rec{position:absolute;left:50%;top:calc(82px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:3;display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(3,11,20,.62);font-family:var(--sign);font-weight:600;font-size:18px;font-variant-numeric:tabular-nums}
 .cam-rec i{width:10px;height:10px;border-radius:50%;background:var(--rec);animation:blink 1s steps(1) infinite}
-.cam-bottom{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:0 22px calc(16px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:1fr auto 1fr;align-items:center;row-gap:12px}
-.cam-gal{grid-column:1;justify-self:start;display:flex;align-items:center;gap:7px;height:38px;padding:0 14px 0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:rgba(3,11,20,.42);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-family:var(--sign);font-weight:600;font-size:16px;cursor:pointer}
+.cam-bottom{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:0 14px calc(16px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:auto 1fr auto auto;grid-template-areas:"gal modes album flip" "shot shot shot shot";align-items:center;column-gap:8px;row-gap:16px}
+.cam-gal{grid-area:gal;justify-self:start;display:flex;align-items:center;gap:6px;height:44px;padding:0 13px 0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:rgba(3,11,20,.42);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-family:var(--sign);font-weight:600;font-size:16px;cursor:pointer}
 .cam-gal svg{width:19px;height:19px}
 .cam-gal:active{transform:scale(.96)}
-.cam-modes{grid-column:2;justify-self:center;display:flex;gap:4px;padding:3px;border-radius:999px;background:rgba(3,11,20,.42);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.cam-modes{grid-area:modes;justify-self:center;display:flex;gap:4px;padding:3px;border-radius:999px;background:rgba(3,11,20,.42);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .cam-mode{border:0;background:transparent;color:rgba(255,255,255,.8);font-family:var(--sign);font-weight:600;font-size:16px;padding:5px 18px;border-radius:999px;cursor:pointer}
 .cam-mode[aria-checked=true]{background:#fff;color:var(--egeo)}
-.cam-album{justify-self:start;position:relative;display:flex;align-items:center;gap:8px;height:48px;padding:0 16px 0 12px;border-radius:999px;border:1.5px solid rgba(255,255,255,.55);background:rgba(3,11,20,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;cursor:pointer;font-family:var(--sign);font-weight:700;font-size:17px;white-space:nowrap}
+.cam-album{grid-area:album;justify-self:end;position:relative;display:flex;align-items:center;gap:7px;height:44px;padding:0 14px 0 11px;border-radius:999px;border:1.5px solid rgba(255,255,255,.55);background:rgba(3,11,20,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;cursor:pointer;font-family:var(--sign);font-weight:700;font-size:16px;white-space:nowrap}
 .cam-album svg{width:22px;height:22px}
 .cam-album:active{transform:scale(.96)}
 .cam-album-n{position:absolute;top:-7px;right:-6px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--oro);color:var(--egeo);font-size:13px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
@@ -262,8 +262,9 @@ body.recording .cam-frame i{border-color:var(--rec)}
 .cam-thumb img{width:100%;height:100%;object-fit:cover}
 .cam-thumb svg{width:24px;height:24px}
 .cam-album-lbl{font-family:var(--sign);font-weight:600;font-size:16px;line-height:1.15;max-width:9ch}
-.cam-bottom .cam-icon.lg{justify-self:end}
-.shutter{width:84px;height:84px;border-radius:50%;border:4px solid #fff;background:transparent;display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:0 0 0 1px rgba(228,199,127,.55),0 8px 30px rgba(0,0,0,.35)}
+.cam-bottom .cam-icon.lg{grid-area:flip;justify-self:end;width:44px;height:44px}
+.cam-bottom .cam-icon.lg svg{width:22px;height:22px}
+.shutter{grid-area:shot;justify-self:center;width:84px;height:84px;border-radius:50%;border:4px solid #fff;background:transparent;display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:0 0 0 1px rgba(228,199,127,.55),0 8px 30px rgba(0,0,0,.35)}
 .shutter i{width:66px;height:66px;border-radius:50%;background:#fff;transition:transform .12s,background .2s,width .2s,height .2s,border-radius .2s}
 .shutter:active i{transform:scale(.88)}
 .shutter.is-video i{background:var(--rec)}
@@ -663,7 +664,18 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
   .lb-nav{width:40px;height:40px;font-size:24px;background:rgba(3,11,20,.55)}
   .lb-stage .seal.big{width:72px;height:72px}
 }
-@media (max-width:360px){ .cam-album{padding:0 12px 0 10px;font-size:15px} }
+
+@media (max-width:400px){
+  .cam-bottom{padding-left:10px;padding-right:10px;column-gap:6px}
+  .cam-gal,.cam-album{font-size:15px;padding:0 10px 0 8px;gap:5px}
+  .cam-mode{padding:5px 11px;font-size:15px}
+  .cam-album-ver{display:none}
+}
+@media (max-width:340px){
+  .cam-gal{width:44px;padding:0;justify-content:center}
+  .cam-gal .cam-lbl{display:none}
+}
+  
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .hero-temple path{stroke-dashoffset:0}
@@ -868,7 +880,7 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
   <div class="cam-bottom">
     <button type="button" class="cam-gal" id="camGal" aria-label="Galería: subir fotos y videos de tu teléfono">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg>
-      Galería
+         <span class="cam-lbl">Galería</span>
     </button>
     <div class="cam-modes" role="radiogroup" aria-label="Modo de la cámara">
       <button type="button" class="cam-mode" role="radio" data-mode="foto" aria-checked="true">Foto</button>
@@ -876,7 +888,7 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
     </div>
     <button type="button" class="cam-album" id="camClose" aria-label="Ver álbum: todas las fotos y videos compartidos">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
-      Ver álbum
+          <span class="cam-album-ver">Ver </span>álbum
       <span class="cam-album-n" id="camAlbumN" hidden></span>
     </button>
     <button type="button" class="shutter" id="shutter" aria-label="Tomar foto"><i></i></button>

@@ -11,6 +11,12 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="theme-color" content="#0B2A4A">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Boda J&amp;L">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📸</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -638,6 +644,27 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
   .pass-top,.pass-band{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 
+/* ---------- Instalar como app ---------- */
+.pwa{z-index:85;align-items:flex-end;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));background:rgba(3,11,20,.72)}
+.pwa-card{width:100%;max-width:440px;background:#fff;color:var(--tinta);border-radius:24px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.5);animation:pwaup .45s cubic-bezier(.2,1.2,.4,1)}
+@keyframes pwaup{from{transform:translateY(40px);opacity:0}}
+.pwa-card .pass-top,.pwa-card .pass-band{margin:0}
+.pwa-body{padding:20px 22px 22px;display:grid;gap:14px}
+.pwa-hero{display:flex;gap:14px;align-items:center}
+.pwa-icon{width:64px;height:64px;border-radius:16px;flex:none;box-shadow:0 8px 20px rgba(11,42,74,.3)}
+.pwa-hero h2{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.1;color:var(--egeo)}
+.pwa-hero p{font-size:15px;color:#34465A;margin-top:4px;line-height:1.4}
+.pwa-steps{list-style:none;display:grid;gap:10px;counter-reset:s}
+.pwa-steps li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:center;font-size:15.5px;color:#34465A;line-height:1.4}
+.pwa-steps li::before{counter-increment:s;content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--egeo);color:var(--oro-claro);display:grid;place-items:center;font-family:var(--sign);font-weight:700}
+.pwa-steps b{color:var(--egeo)}
+.pwa-ico{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--marmol);border:1px solid var(--linea);vertical-align:middle;margin:0 2px}
+.pwa-ico svg{width:16px;height:16px;color:var(--azul)}
+.pwa-note{font-size:14px;color:var(--gris);background:var(--marmol);border-radius:12px;padding:10px 12px;line-height:1.4}
+.pwa-actions{display:grid;gap:8px}
+.cam-install{margin-top:8px;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--oro);background:rgba(3,11,20,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--oro-claro);font-family:var(--sign);font-weight:700;font-size:14px;cursor:pointer}
+body.recording .cam-install{visibility:hidden}
+
 /* ---------- Responsive ---------- */
 @media (min-width:760px){ .grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px} }
 @media (max-width:980px){
@@ -719,6 +746,7 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
       </div>
       <p class="hero-status" id="heroStatus">Abriendo el álbum…</p>
       <button type="button" class="linkbtn" id="guideOpen" style="color:var(--oro-claro);margin-top:8px">Ver la guía rápida</button>
+      <button type="button" class="linkbtn" id="heroInstall" style="color:var(--oro-claro);margin:8px 0 0 18px" hidden>📲 Instalar como app</button>
     </div>
     <div class="pass-wrap" id="heroPassWrap">
       <article class="pass" id="heroPass" aria-label="Tu pase de abordar">
@@ -867,7 +895,10 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
     </div>
   </div>
   <div class="cam-top">
-    <p class="cam-brand">Boda Jeni &amp; Leo<small>Atenas, Grecia, 2026</small></p>
+    <div>
+      <p class="cam-brand">Boda Jeni &amp; Leo<small>Atenas, Grecia, 2026</small></p>
+      <button type="button" class="cam-install" id="camInstall" hidden>📲 Instalar app</button>
+    </div>
     <div class="cam-tools">
       <button type="button" class="cam-play" id="camPlay" aria-label="Retos"><span class="cam-hint" id="camHint" aria-hidden="true" hidden>Toca aquí y empieza la historia</span><span class="q-ring" id="playRing"><b id="playLvl">1</b></span>Retos <small id="playCount"></small></button>
     </div>
@@ -1007,6 +1038,27 @@ body.mode-qr .qr-poster{display:flex;flex-direction:column;align-items:center;ga
   </div>
 </div>
 
+<!-- Instalar como app -->
+<div class="modal pwa" id="pwa" role="dialog" aria-modal="true" aria-labelledby="pwaTitle" hidden>
+  <div class="pwa-card">
+    <header class="pass-top"><span class="pass-brand">JLO<small>Wedding Air</small></span><span class="pass-kind">Tu app</span></header>
+    <div class="pass-band"></div>
+    <div class="pwa-body">
+      <div class="pwa-hero">
+        <img class="pwa-icon" src="icons/icon-192.png" alt="">
+        <div><h2 id="pwaTitle">Llévate el álbum como app</h2><p>Un toque desde tu pantalla de inicio y vuelves directo a la cámara, sin buscar el link.</p></div>
+      </div>
+      <div id="pwaHow"></div>
+      <div class="pwa-actions">
+        <button type="button" class="btn btn-oro" id="pwaInstall" hidden>📲 Instalar app</button>
+        <button type="button" class="btn btn-dark" id="pwaCopy" hidden>Copiar link</button>
+        <button type="button" class="btn btn-soft" id="pwaDone" hidden>Ya la agregué</button>
+        <button type="button" class="btn btn-soft" id="pwaLater">Ahora no</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Check-in de nombre -->
 <div class="modal" id="nameModal" role="dialog" aria-modal="true" aria-labelledby="nameTitle" hidden>
   <form class="namecard" id="nameForm" novalidate>
@@ -1128,7 +1180,7 @@ var MODE = (params.get('modo') || '').toLowerCase();
 var KEY = params.get('k') || CONFIG.ACCESS_KEY;
 var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var PLANE = 'M12 2c.8 0 1.5.7 1.5 1.5V9l7.5 4.5v2L13.5 13v5l2.5 1.8V21L12 20l-4 1v-1.2l2.5-1.8v-5L3 15.5v-2L10.5 9V3.5C10.5 2.7 11.2 2 12 2z';
-var LS = {likes:'jlo_album_likes', seen:'jlo_album_seen', guide:'jlo_album_guide', name:'jlo_album_name', mine:'jlo_album_mine', mode:'jlo_album_mode', quest:'jlo_album_quest', done:'jlo_album_retos', chap:'jlo_album_chap', hint:'jlo_album_hint', atrev:'jlo_album_atrevidos_ok', group:'jlo_album_group'};
+var LS = {likes:'jlo_album_likes', seen:'jlo_album_seen', guide:'jlo_album_guide', name:'jlo_album_name', mine:'jlo_album_mine', mode:'jlo_album_mode', quest:'jlo_album_quest', done:'jlo_album_retos', chap:'jlo_album_chap', hint:'jlo_album_hint', atrev:'jlo_album_atrevidos_ok', group:'jlo_album_group', pwa:'jlo_album_pwa'};
 var MONTHS = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 
 /* ---------- utilidades ---------- */
@@ -1799,6 +1851,8 @@ var BTN_NAMES = {
   qClose:'cerrar_retos', qAccept:'acepto_reto', qPrev:'regresar_reto', qGallery:'desde_mi_galeria',
   qAllBtn:'mi_pasaporte', qBack:'volver_del_pasaporte', qGroupBack:'cambiar_etapa',
   qGateOk:'acepto_entrar_privado', qGateOut:'salirme_privado', cqOpen:'ver_reto_activo', cqClear:'quitar_reto_activo',
+    camInstall:'instalar_app_camara', heroInstall:'instalar_app_inicio', pwaInstall:'instalar_app_confirmar',
+  pwaLater:'instalar_app_ahora_no', pwaDone:'instalar_app_ya_agregue', pwaCopy:'instalar_app_copiar_link',
   lbClose:'cerrar_visor', lbPrev:'visor_anterior', lbNext:'visor_siguiente', lbDl:'descargar', lbOpen:'ver_original'
 };
 function buttonName(el){
@@ -2411,7 +2465,8 @@ function pump(){
     var p = res.photo;
     it.status = 'done';
     if (it.ch && !p.ch) p.ch = it.ch;
-    track('upload_success', Object.assign({kind:it.kind, source:it.source, with_caption:it.caption ? 1 : 0}, retoParams(RETO[it.ch])));
+        track('upload_success', Object.assign({kind:it.kind, source:it.source, with_caption:it.caption ? 1 : 0}, retoParams(RETO[it.ch])));
+    setTimeout(function(){ if ($('#camReview').hidden && $('#quest').hidden && $('#lb').hidden && !cam.rec) maybeInstall('subida'); }, 3800);
     if (isPrivCh(it.ch)){
       // Atrevidos: no entra al álbum; solo suma el sello y el conteo del grupo
       it.blob = null;
@@ -3379,6 +3434,112 @@ function showSlide(p, url){
   if (r){ $('#scrChLbl').textContent = capLabel(r.c); $('#scrCh').textContent = r.t; }
 }
 
+/* ---------- instalar como app (PWA) ---------- */
+var PWA = {evt:null, resolve:null, src:''};
+function isStandalone(){
+  try { return window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || navigator.standalone === true; }
+  catch(e){ return false; }
+}
+function device(){
+  var ua = navigator.userAgent || '';
+  var ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var android = /Android/i.test(ua);
+  return {ios:ios, android:android, mobile:ios || android,
+    inApp:/FBAN|FBAV|FB_IAB|Instagram|Line\/|Snapchat|musical_ly|TikTok|LinkedInApp/i.test(ua) || (android && /; wv\)/.test(ua)),
+    iosOther:ios && /CriOS|FxiOS|EdgiOS/.test(ua)};
+}
+function pwaState(){ try { return JSON.parse(lsGet(LS.pwa, '{}')) || {}; } catch(e){ return {}; } }
+function pwaSave(s){ lsSet(LS.pwa, JSON.stringify(s)); }
+function canOfferInstall(){ return !isStandalone() && !pwaState().installed && (device().mobile || !!PWA.evt); }
+function paintInstallButtons(){ var on = canOfferInstall(); $('#camInstall').hidden = !on; $('#heroInstall').hidden = !on; }
+var ICO_SHARE = '<span class="pwa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M7 11H5v10h14V11h-2"/></svg></span>';
+var ICO_PLUS = '<span class="pwa-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span>';
+function renderPwa(){
+  var d = device(), how = '', btn = false, copy = false, done = false;
+  if (PWA.evt){
+    btn = true;
+    how = '<p class="pwa-note">Se instala en segundos y casi no ocupa espacio.</p>';
+  } else if (d.inApp){
+    copy = true;
+    how = '<p class="pwa-note">Estás dentro de otra app. Para instalar el álbum, ábrelo en <b>' + (d.ios ? 'Safari' : 'Chrome') + '</b>: toca el menú y elige "Abrir en el navegador", o copia el link y pégalo allí.</p>';
+  } else if (d.ios){
+    done = true;
+    how = '<ol class="pwa-steps">' +
+      '<li><span>Toca <b>Compartir</b> ' + ICO_SHARE + (d.iosOther ? ' arriba, junto a la barra de dirección.' : ' en la barra de Safari. Si no lo ves, toca <b>•••</b> primero.') + '</span></li>' +
+      '<li><span>Desliza y toca <b>Agregar a inicio</b> ' + ICO_PLUS + '</span></li>' +
+      '<li><span>Toca <b>Agregar</b>. El álbum queda con su propio ícono.</span></li></ol>' +
+      '<p class="pwa-note">En iPhone la app guarda tus sellos aparte de Safari: agrégala antes de empezar a jugar. ¿No aparece "Agregar a inicio"? Abre este link en Safari.</p>';
+  } else {
+    done = true;
+    how = '<ol class="pwa-steps">' +
+      '<li><span>Toca el menú <b>⋮</b> del navegador.</span></li>' +
+      '<li><span>Elige <b>Instalar app</b> o <b>Agregar a pantalla principal</b>.</span></li>' +
+      '<li><span>Confirma. El álbum queda como app en tu inicio.</span></li></ol>';
+  }
+  $('#pwaHow').innerHTML = how;
+  $('#pwaInstall').hidden = !btn; $('#pwaCopy').hidden = !copy; $('#pwaDone').hidden = !done;
+}
+function openPwa(src){
+  return new Promise(function(resolve){
+    if (!canOfferInstall() || !$('#pwa').hidden){ resolve(); return; }
+    PWA.resolve = resolve; PWA.src = src;
+    var s = pwaState(); s.shown = (s.shown || 0) + 1; pwaSave(s);
+    renderPwa(); $('#pwa').hidden = false; document.body.classList.add('noscroll');
+    var d = device();
+    track('pwa_prompt_view', {source:src, native:PWA.evt ? 1 : 0, platform:d.ios ? 'ios' : d.android ? 'android' : 'otro', in_app:d.inApp ? 1 : 0});
+    setTimeout(function(){ ($('#pwaInstall').hidden ? $('#pwaLater') : $('#pwaInstall')).focus(); }, 60);
+  });
+}
+function closePwa(){
+  $('#pwa').hidden = true;
+  if ($('#cam').hidden) document.body.classList.remove('noscroll');
+  var r = PWA.resolve; PWA.resolve = null; if (r) r();
+}
+// Automático: la primera vez que entra, y una segunda oportunidad después de su primera subida
+function maybeInstall(src){
+  var n = pwaState().shown || 0;
+  if (!canOfferInstall()) return Promise.resolve();
+  if (src === 'subida' ? n !== 1 : n > 0) return Promise.resolve();
+  return openPwa(src);
+}
+function initPwa(){
+  if ('serviceWorker' in navigator && location.protocol === 'https:'){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault(); PWA.evt = e; paintInstallButtons();
+    if (!$('#pwa').hidden) renderPwa();
+  });
+  window.addEventListener('appinstalled', function(){
+    var s = pwaState(); s.installed = 1; pwaSave(s); PWA.evt = null;
+    track('pwa_installed'); paintInstallButtons();
+    if (!$('#pwa').hidden) closePwa();
+    toast('Listo. El álbum ya está en tu pantalla de inicio.');
+  });
+  if (isStandalone()) track('pwa_launch');
+  $('#pwaInstall').addEventListener('click', function(){
+    var e = PWA.evt; if (!e){ renderPwa(); return; }
+    PWA.evt = null; e.prompt();
+    e.userChoice.then(function(c){
+      var ok = c && c.outcome === 'accepted';
+      track(ok ? 'pwa_accept' : 'pwa_reject', {source:PWA.src});
+      if (ok){ var s = pwaState(); s.installed = 1; pwaSave(s); }
+      paintInstallButtons(); closePwa();
+    }, closePwa);
+  });
+  $('#pwaLater').addEventListener('click', function(){ track('pwa_dismiss', {source:PWA.src}); closePwa(); });
+  $('#pwaDone').addEventListener('click', function(){ var s = pwaState(); s.installed = 1; pwaSave(s); paintInstallButtons(); closePwa(); });
+  $('#pwaCopy').addEventListener('click', function(){
+    var u = albumUrl();
+    (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function(){
+      toast('Link copiado. Pégalo en ' + (device().ios ? 'Safari' : 'Chrome') + '.');
+    }).catch(function(){ window.prompt('Copia este link:', u); });
+  });
+  $('#camInstall').addEventListener('click', function(){ openPwa('camara'); });
+  $('#heroInstall').addEventListener('click', function(){ openPwa('portada'); });
+  paintInstallButtons();
+}
+
 /* ---------- arranque ---------- */
 function init(){
   $$('[data-hashtag]').forEach(function(el){ el.textContent = CONFIG.HASHTAG; });
@@ -3398,7 +3559,7 @@ function init(){
   }
 
   initClickTracking();
-  tilt(); initFilters(); initCamera(); initQuest(); initLightbox(); initFeed();
+  tilt(); initFilters(); initCamera(); initQuest(); initLightbox(); initFeed(); initPwa();
   $('#heroCam').addEventListener('click', openCamera);
   $('#emptyCam').addEventListener('click', openCamera);
   $('#heroUpload').addEventListener('click', pickGallery);
@@ -3417,14 +3578,16 @@ function init(){
     guideBubble('¡Empezar! 🚀', 'me');
     setTimeout(function(){
       $('#guide').hidden = true;
-      if (!$('#cam').hidden || !startCam) document.body.classList.toggle('noscroll', !$('#cam').hidden);
-      if (startCam && $('#cam').hidden) openCamera();
-      startCam = false;
+      maybeInstall('guia').then(function(){
+        if (!$('#cam').hidden || !startCam) document.body.classList.toggle('noscroll', !$('#cam').hidden);
+        if (startCam && $('#cam').hidden) openCamera();
+        startCam = false;
+      });
     }, RM ? 0 : 550);
   });
   $('#guideOpen').addEventListener('click', function(){ showGuide(); });
   if (lsGet(LS.guide, '') !== '1') showGuide();
-  else if (startCam){ startCam = false; openCamera(); }
+  else if (startCam){ startCam = false; maybeInstall('inicio').then(openCamera); }
   setInterval(function(){ if (!document.hidden) loadList(); }, CONFIG.REFRESH_MS);
   document.addEventListener('visibilitychange', function(){ if (!document.hidden) loadList(); });
 
